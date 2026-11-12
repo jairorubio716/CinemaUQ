@@ -1,5 +1,8 @@
 package co.edu.uniquindio.cinemauq.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Sala {
 
     private int idSala;
@@ -7,6 +10,7 @@ public class Sala {
     private int filas;
     private int columnas;
     private String tipoPantalla;
+    private List<Asiento> asientos = new ArrayList<>();
 
     public Sala(int idSala, int numeroSala, int filas, int columnas, String tipoPantalla) {
         this.idSala = idSala;
@@ -54,6 +58,24 @@ public class Sala {
 
     public void setTipoPantalla(String tipoPantalla) {
         this.tipoPantalla = tipoPantalla;
+    }
+
+    public List<Asiento> getAsientos() {
+        return asientos;
+    }
+
+    public void setAsientos(List<Asiento> asientos) {
+        this.asientos = asientos;
+    }
+
+    public void agregarAsiento(Asiento asiento) {
+        if (asiento != null) {
+            asientos.add(asiento);
+        }
+    }
+
+    public int getCapacidad() {
+        return filas * columnas;
     }
 
     @Override

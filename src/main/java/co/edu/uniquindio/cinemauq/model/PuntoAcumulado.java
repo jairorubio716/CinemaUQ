@@ -49,6 +49,16 @@ public class PuntoAcumulado {
         this.fechaVencimiento = fechaVencimiento;
     }
 
+    public boolean estaVigente() {
+        return fechaVencimiento == null || !LocalDate.now().isAfter(fechaVencimiento);
+    }
+
+    public int consumir(int cantidadSolicitada) {
+        int usado = Math.min(cantidadSolicitada, this.cantidad);
+        this.cantidad -= usado;
+        return usado;
+    }
+
     @Override
     public String toString() {
         return "PuntoAcumulado{" +

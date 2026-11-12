@@ -1,5 +1,8 @@
 package co.edu.uniquindio.cinemauq.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Pelicula {
 
     private String idPelicula;
@@ -10,6 +13,7 @@ public class Pelicula {
     private String sinopsis;
     private String imagenPoster;
     private boolean enCartelera;
+    private List<Funcion> funciones = new ArrayList<>();
 
     public Pelicula(String idPelicula, String titulo, String genero, int duracionMin,
                     Clasificacion clasificacion, String sinopsis, String imagenPoster,
@@ -88,6 +92,20 @@ public class Pelicula {
         this.enCartelera = enCartelera;
     }
 
+    public List<Funcion> getFunciones() {
+        return funciones;
+    }
+
+    public void setFunciones(List<Funcion> funciones) {
+        this.funciones = funciones;
+    }
+
+    public void agregarFuncion(Funcion funcion) {
+        if (funcion != null) {
+            funciones.add(funcion);
+        }
+    }
+
     @Override
     public String toString() {
         return "Pelicula{" +
@@ -96,7 +114,6 @@ public class Pelicula {
                 ", genero='" + genero + '\'' +
                 ", duracionMin=" + duracionMin +
                 ", clasificacion=" + clasificacion +
-                ", sinopsis='" + sinopsis + '\'' +
                 ", enCartelera=" + enCartelera +
                 '}';
     }

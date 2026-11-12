@@ -1,7 +1,8 @@
 package co.edu.uniquindio.cinemauq.model;
 
 public enum EstadoFuncion {
-    ACTIVA,
+    PROGRAMADA,
+    EN_VENTA,
     CANCELADA,
     FINALIZADA
 }

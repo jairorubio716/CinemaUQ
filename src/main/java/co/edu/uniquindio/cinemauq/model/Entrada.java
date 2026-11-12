@@ -5,11 +5,15 @@ public class Entrada {
     private String idEntrada;
     private String codigo;
     private double precio;
+    private Funcion funcion;
+    private Asiento asiento;
 
-    public Entrada(String idEntrada, String codigo, double precio) {
+    public Entrada(String idEntrada, String codigo, double precio, Funcion funcion, Asiento asiento) {
         this.idEntrada = idEntrada;
         this.codigo = codigo;
         this.precio = precio;
+        this.funcion = funcion;
+        this.asiento = asiento;
     }
 
     public String getIdEntrada() {
@@ -34,6 +38,22 @@ public class Entrada {
 
     public void setPrecio(double precio) {
         this.precio = precio;
+    }
+
+    public Funcion getFuncion() {
+        return funcion;
+    }
+
+    public void setFuncion(Funcion funcion) {
+        this.funcion = funcion;
+    }
+
+    public Asiento getAsiento() {
+        return asiento;
+    }
+
+    public void setAsiento(Asiento asiento) {
+        this.asiento = asiento;
     }
 
     @Override

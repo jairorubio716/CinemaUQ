@@ -8,13 +8,15 @@ public class SolicitudRecarga {
     private LocalDateTime fecha;
     private double monto;
     private EstadoSolicitudRecarga estado;
+    private TarjetaVirtual tarjeta;
 
-    public SolicitudRecarga(String idSolicitud, LocalDateTime fecha,
-                            double monto, EstadoSolicitudRecarga estado) {
+    public SolicitudRecarga(String idSolicitud, LocalDateTime fecha, double monto,
+                            EstadoSolicitudRecarga estado, TarjetaVirtual tarjeta) {
         this.idSolicitud = idSolicitud;
         this.fecha = fecha;
         this.monto = monto;
         this.estado = estado;
+        this.tarjeta = tarjeta;
     }
 
     public String getIdSolicitud() {
@@ -47,6 +49,14 @@ public class SolicitudRecarga {
 
     public void setEstado(EstadoSolicitudRecarga estado) {
         this.estado = estado;
+    }
+
+    public TarjetaVirtual getTarjeta() {
+        return tarjeta;
+    }
+
+    public void setTarjeta(TarjetaVirtual tarjeta) {
+        this.tarjeta = tarjeta;
     }
 
     @Override

@@ -69,6 +69,29 @@ public class Promocion {
         this.fechaFin = fechaFin;
     }
 
+    public boolean estaVigente() {
+        LocalDate hoy = LocalDate.now();
+        boolean despuesInicio = fechaInicio == null || !hoy.isBefore(fechaInicio);
+        boolean antesFin = fechaFin == null || !hoy.isAfter(fechaFin);
+        return despuesInicio && antesFin;
+    }
+
+    public double calcularDescuento(double precioBase) {
+        if (!estaVigente() || precioBase <= 0) {
+            return 0;
+        }
+        switch (tipo) {
+            case DESCUENTO_PORCENTAJE:
+                return precioBase * (porcentajeOValor / 100.0);
+            case DESCUENTO_MONTO:
+                return Math.min(porcentajeOValor, precioBase);
+            case DOS_POR_UNO:
+                return precioBase / 2.0;
+            default:
+                return 0;
+        }
+    }
+
     @Override
     public String toString() {
         return "Promocion{" +

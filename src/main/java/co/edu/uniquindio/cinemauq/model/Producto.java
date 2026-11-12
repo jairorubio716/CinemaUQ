@@ -1,6 +1,6 @@
 package co.edu.uniquindio.cinemauq.model;
 
-public class Producto {
+public class Producto implements IItemVendible {
 
     private String idProducto;
     private String nombre;
@@ -44,6 +44,21 @@ public class Producto {
 
     public void setTipo(TipoProducto tipo) {
         this.tipo = tipo;
+    }
+
+    @Override
+    public String getId() {
+        return idProducto;
+    }
+
+    @Override
+    public double obtenerPrecio() {
+        return precio;
+    }
+
+    @Override
+    public String descripcion() {
+        return nombre + " (" + tipo + ")";
     }
 
     @Override
