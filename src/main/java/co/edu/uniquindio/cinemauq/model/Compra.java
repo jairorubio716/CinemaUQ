@@ -1,5 +1,8 @@
 package co.edu.uniquindio.cinemauq.model;
 
+import co.edu.uniquindio.cinemauq.patrones.state.EstadosCompra;
+import co.edu.uniquindio.cinemauq.patrones.state.IEstadoCompra;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +18,7 @@ public class Compra {
     private List<IItemVendible> confiteria = new ArrayList<>();
     private List<Promocion> promociones = new ArrayList<>();
     private double descuento;
+    private transient IEstadoCompra estadoActual;
 
     public Compra(String idCompra, LocalDateTime fecha, Cliente cliente) {
         this.idCompra = idCompra;
@@ -53,6 +57,34 @@ public class Compra {
 
     public void setEstado(EstadoCompra estado) {
         this.estado = estado;
+        this.estadoActual = null;
+    }
+
+    public IEstadoCompra getEstadoActual() {
+        if (estadoActual == null) {
+            estadoActual = EstadosCompra.crear(estado);
+        }
+        return estadoActual;
+    }
+
+    public void cambiarEstado(IEstadoCompra nuevoEstado) {
+        if (nuevoEstado == null) {
+            return;
+        }
+        this.estadoActual = nuevoEstado;
+        this.estado = nuevoEstado.getCodigo();
+    }
+
+    public void cambiarEstado(EstadoCompra nuevoEstado) {
+        cambiarEstado(EstadosCompra.crear(nuevoEstado));
+    }
+
+    public boolean puedePagarse() {
+        return getEstadoActual().permitePago();
+    }
+
+    public boolean puedeReembolsarse() {
+        return getEstadoActual().permiteReembolso();
     }
 
     public Cliente getCliente() {

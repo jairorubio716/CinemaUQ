@@ -13,7 +13,7 @@ public class Pelicula {
     private String sinopsis;
     private String imagenPoster;
     private boolean enCartelera;
-    private List<Funcion> funciones = new ArrayList<>();
+    private transient List<Funcion> funciones = new ArrayList<>();
 
     public Pelicula(String idPelicula, String titulo, String genero, int duracionMin,
                     Clasificacion clasificacion, String sinopsis, String imagenPoster,

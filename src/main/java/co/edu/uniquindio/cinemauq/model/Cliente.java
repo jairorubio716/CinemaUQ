@@ -10,8 +10,8 @@ public class Cliente extends Persona {
     private LocalDate fechaRegistro;
     private TarjetaVirtual tarjetaVirtual;
     private CuentaPuntos cuentaPuntos;
-    private List<Compra> compras = new ArrayList<>();
-    private List<SolicitudRecarga> solicitudesRecarga = new ArrayList<>();
+    private transient List<Compra> compras = new ArrayList<>();
+    private transient List<SolicitudRecarga> solicitudesRecarga = new ArrayList<>();
 
     public Cliente(String nombre, String email, String celular, String usuario, String contrasena,
                    String idCliente, LocalDate fechaRegistro) {

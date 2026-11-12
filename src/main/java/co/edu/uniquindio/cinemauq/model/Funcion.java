@@ -12,7 +12,7 @@ public class Funcion {
     private EstadoFuncion estado;
     private Pelicula pelicula;
     private Sala sala;
-    private List<Entrada> entradasVendidas = new ArrayList<>();
+    private transient List<Entrada> entradasVendidas = new ArrayList<>();
 
     public Funcion(String idFuncion, LocalDateTime fechaHora, double precioEntrada,
                    EstadoFuncion estado, Pelicula pelicula, Sala sala) {
