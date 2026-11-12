@@ -2,14 +2,22 @@ package co.edu.uniquindio.cinemauq.patrones.facade;
 
 import co.edu.uniquindio.cinemauq.model.Administrador;
 import co.edu.uniquindio.cinemauq.model.Asiento;
+import co.edu.uniquindio.cinemauq.model.Clasificacion;
 import co.edu.uniquindio.cinemauq.model.Cliente;
+import co.edu.uniquindio.cinemauq.model.Combo;
 import co.edu.uniquindio.cinemauq.model.Compra;
+import co.edu.uniquindio.cinemauq.model.Entrada;
+import co.edu.uniquindio.cinemauq.model.EstadoFuncion;
 import co.edu.uniquindio.cinemauq.model.Funcion;
 import co.edu.uniquindio.cinemauq.model.IItemVendible;
 import co.edu.uniquindio.cinemauq.model.Pelicula;
 import co.edu.uniquindio.cinemauq.model.Persona;
+import co.edu.uniquindio.cinemauq.model.Producto;
 import co.edu.uniquindio.cinemauq.model.Promocion;
+import co.edu.uniquindio.cinemauq.model.Sala;
 import co.edu.uniquindio.cinemauq.model.SolicitudRecarga;
+import co.edu.uniquindio.cinemauq.model.TipoProducto;
+import co.edu.uniquindio.cinemauq.model.TipoPromocion;
 import co.edu.uniquindio.cinemauq.patrones.adapter.PagoAdapter;
 import co.edu.uniquindio.cinemauq.patrones.adapter.PasarelaExterna;
 import co.edu.uniquindio.cinemauq.patrones.factory.FabricaEntrada;
@@ -17,13 +25,17 @@ import co.edu.uniquindio.cinemauq.patrones.observer.NotificadorObservable;
 import co.edu.uniquindio.cinemauq.patrones.strategy.PuntosPorValor;
 import co.edu.uniquindio.cinemauq.repository.RepositorioDatos;
 import co.edu.uniquindio.cinemauq.service.AutenticacionService;
+import co.edu.uniquindio.cinemauq.service.CatalogoAdminService;
 import co.edu.uniquindio.cinemauq.service.CatalogoService;
 import co.edu.uniquindio.cinemauq.service.CompraService;
+import co.edu.uniquindio.cinemauq.service.FuncionService;
 import co.edu.uniquindio.cinemauq.service.PuntoService;
 import co.edu.uniquindio.cinemauq.service.RecargaService;
 import co.edu.uniquindio.cinemauq.service.ReembolsoService;
 
 import java.nio.file.Paths;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -42,6 +54,8 @@ public class CinemaFacade {
     private final PuntoService puntoService;
     private final ReembolsoService reembolsoService;
     private final RecargaService recargaService;
+    private final CatalogoAdminService catalogoAdminService;
+    private final FuncionService funcionService;
 
     private CinemaFacade() {
         catalogo = CatalogoService.getInstance();
@@ -56,6 +70,8 @@ public class CinemaFacade {
         reembolsoService = new ReembolsoService(catalogo, notificador);
         recargaService = new RecargaService(catalogo,
                 new PagoAdapter(new PasarelaExterna()), notificador);
+        catalogoAdminService = new CatalogoAdminService(catalogo);
+        funcionService = new FuncionService(catalogo, reembolsoService);
     }
 
     public static synchronized CinemaFacade getInstance() {
@@ -91,6 +107,14 @@ public class CinemaFacade {
 
     public RecargaService getRecargaService() {
         return recargaService;
+    }
+
+    public CatalogoAdminService getCatalogoAdminService() {
+        return catalogoAdminService;
+    }
+
+    public FuncionService getFuncionService() {
+        return funcionService;
     }
 
     public Persona iniciarSesion(String usuario, String contrasena) {
@@ -160,6 +184,92 @@ public class CinemaFacade {
             }
         }
         return pendientes;
+    }
+
+    public int redimirBeneficio(Cliente cliente, String beneficio) {
+        return puntoService.redimirBeneficio(cliente, beneficio);
+    }
+
+    public boolean puedeRedimir(Cliente cliente, String beneficio) {
+        return puntoService.puedeRedimir(cliente, beneficio);
+    }
+
+    public Pelicula crearPelicula(Administrador admin, String titulo, String genero, int duracionMin,
+                                  Clasificacion clasificacion, String sinopsis, String poster,
+                                  boolean enCartelera) {
+        return catalogoAdminService.crearPelicula(admin, titulo, genero, duracionMin,
+                clasificacion, sinopsis, poster, enCartelera);
+    }
+
+    public void actualizarPelicula(Administrador admin, Pelicula pelicula) {
+        catalogoAdminService.actualizarPelicula(admin, pelicula);
+    }
+
+    public void eliminarPelicula(Administrador admin, String idPelicula) {
+        catalogoAdminService.eliminarPelicula(admin, idPelicula);
+    }
+
+    public Sala crearSala(Administrador admin, int numeroSala, int filas, int columnas,
+                          String tipoPantalla) {
+        return catalogoAdminService.crearSala(admin, numeroSala, filas, columnas, tipoPantalla);
+    }
+
+    public void eliminarSala(Administrador admin, int idSala) {
+        catalogoAdminService.eliminarSala(admin, idSala);
+    }
+
+    public Funcion crearFuncion(Administrador admin, Pelicula pelicula, Sala sala,
+                                LocalDateTime fechaHora, double precioEntrada, EstadoFuncion estado) {
+        return catalogoAdminService.crearFuncion(admin, pelicula, sala, fechaHora, precioEntrada, estado);
+    }
+
+    public void eliminarFuncion(Administrador admin, String idFuncion) {
+        catalogoAdminService.eliminarFuncion(admin, idFuncion);
+    }
+
+    public double cancelarFuncion(Administrador admin, Funcion funcion) {
+        return funcionService.cancelarFuncion(admin, funcion);
+    }
+
+    public void activarVentaFuncion(Administrador admin, Funcion funcion) {
+        funcionService.activarVenta(admin, funcion);
+    }
+
+    public Producto crearProducto(Administrador admin, String nombre, double precio, TipoProducto tipo) {
+        return catalogoAdminService.crearProducto(admin, nombre, precio, tipo);
+    }
+
+    public void eliminarProducto(Administrador admin, String idProducto) {
+        catalogoAdminService.eliminarProducto(admin, idProducto);
+    }
+
+    public Combo crearCombo(Administrador admin, String nombre, List<IItemVendible> items) {
+        return catalogoAdminService.crearCombo(admin, nombre, items);
+    }
+
+    public void eliminarCombo(Administrador admin, String idCombo) {
+        catalogoAdminService.eliminarCombo(admin, idCombo);
+    }
+
+    public Promocion crearPromocion(Administrador admin, String nombre, TipoPromocion tipo,
+                                    double porcentajeOValor, LocalDate inicio, LocalDate fin) {
+        return catalogoAdminService.crearPromocion(admin, nombre, tipo, porcentajeOValor, inicio, fin);
+    }
+
+    public void eliminarPromocion(Administrador admin, String idPromocion) {
+        catalogoAdminService.eliminarPromocion(admin, idPromocion);
+    }
+
+    public List<Cliente> consultarClientes(Administrador admin) {
+        return catalogoAdminService.consultarClientes(admin);
+    }
+
+    public List<Compra> consultarCompras(Administrador admin) {
+        return catalogoAdminService.consultarCompras(admin);
+    }
+
+    public List<Entrada> consultarEntradasVendidas(Administrador admin) {
+        return catalogoAdminService.consultarEntradasVendidas(admin);
     }
 
     public void guardarDatos() {

@@ -100,6 +100,32 @@ public class PuntoService {
         return puntosRequeridos;
     }
 
+    public int puntosBeneficio(String beneficio) {
+        if (beneficio == null) {
+            return 0;
+        }
+        return switch (beneficio.trim().toUpperCase()) {
+            case "ENTRADA" -> PUNTOS_ENTRADA;
+            case "PRODUCTO" -> PUNTOS_PRODUCTO;
+            case "COMBO" -> PUNTOS_COMBO;
+            default -> 0;
+        };
+    }
+
+    public boolean puedeRedimir(Cliente cliente, String beneficio) {
+        int requeridos = puntosBeneficio(beneficio);
+        return requeridos > 0 && totalVigente(cliente) >= requeridos;
+    }
+
+    public int redimirBeneficio(Cliente cliente, String beneficio) {
+        int requeridos = puntosBeneficio(beneficio);
+        if (requeridos <= 0) {
+            throw new CinemaUQException("Beneficio no válido: " + beneficio
+                    + ". Use ENTRADA, PRODUCTO o COMBO.");
+        }
+        return redimir(cliente, requeridos);
+    }
+
     private CuentaPuntos obtenerOCrearCuenta(Cliente cliente) {
         if (cliente.getCuentaPuntos() == null) {
             cliente.setCuentaPuntos(new CuentaPuntos("CP-" + cliente.getIdCliente()));
