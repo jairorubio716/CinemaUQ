@@ -67,8 +67,7 @@
                         <!-- Default configuration for running with: mvn clean javafx:run -->
                         <id>default-cli</id>
                         <configuration>
-                            <mainClass>co.edu.uniquindio.cinemauq/co.edu.uniquindio.cinemauq.HelloApplication
-                            </mainClass>
+                            <mainClass>co.edu.uniquindio.cinemauq.Main</mainClass>
                             <launcher>app</launcher>
                             <jlinkZipName>app</jlinkZipName>
                             <jlinkImageName>app</jlinkImageName>
