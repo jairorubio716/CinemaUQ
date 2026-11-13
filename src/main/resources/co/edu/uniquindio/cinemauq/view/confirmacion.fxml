@@ -23,7 +23,7 @@
                     <Label fx:id="pelicula" styleClass="h1" text="Película"/>
                     <Label fx:id="funcion" styleClass="summary-row" text="Función"/>
                     <Label fx:id="asientos" styleClass="summary-row" text="Asientos"/>
-                    <Label fx:id="total" styleClass="price" text="$ 0"/>
+                    <Label fx:id="total" styleClass="price" text="0"/>
                 </VBox>
             </HBox>
             <Separator/>

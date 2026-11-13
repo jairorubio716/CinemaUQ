@@ -1,0 +1,422 @@
+@startuml CinemaUQ - Diseno completo (dominio + patrones + MVC)
+skinparam classAttributeIconSize 0
+skinparam shadowing false
+skinparam nodesep 26
+skinparam ranksep 36
+skinparam packageStyle rectangle
+
+' =========================================================
+' 1) MODELO DE DOMINIO
+' =========================================================
+package "model - Dominio" {
+  abstract class Persona {
+    - nombre : String
+    - email : String
+    - celular : String
+    - usuario : String
+    - contrasena : String
+  }
+  class Cliente {
+    - idCliente : String
+    - fechaRegistro : LocalDate
+  }
+  class Administrador {
+    - idAdmin : String
+  }
+  class Pelicula {
+    - idPelicula : String
+    - titulo : String
+    - genero : String
+    - duracionMin : int
+    - clasificacion : Clasificacion
+    - sinopsis : String
+    - imagenPoster : String
+    - enCartelera : boolean
+  }
+  class Sala {
+    - idSala : int
+    - numeroSala : int
+    - filas : int
+    - columnas : int
+    - tipoPantalla : String
+  }
+  class Asiento {
+    - idAsiento : int
+    - fila : String
+    - columna : int
+    - numero : int
+    - categoria : CategoriaAsiento
+  }
+  class Funcion {
+    - idFuncion : String
+    - fechaHora : LocalDateTime
+    - precioEntrada : double
+    - estado : EstadoFuncion
+  }
+  class Entrada {
+    - idEntrada : String
+    - codigo : String
+    - precio : double
+  }
+  class Compra {
+    - idCompra : String
+    - fecha : LocalDateTime
+    - total : double
+    - estado : EstadoCompra
+  }
+  class Producto {
+    - idProducto : String
+    - nombre : String
+    - precio : double
+    - tipo : TipoProducto
+  }
+  class Combo {
+    - idCombo : String
+    - nombre : String
+    - precio : double
+  }
+  class TarjetaVirtual {
+    - nroTarjeta : String
+    - saldo : double
+    - estado : EstadoTarjeta
+  }
+  class Movimiento {
+    - idMovimiento : int
+    - fecha : LocalDateTime
+    - tipo : TipoMovimiento
+    - monto : double
+    - saldoResultante : double
+  }
+  class CuentaPuntos {
+    - idCuenta : String
+  }
+  class PuntoAcumulado {
+    - idPunto : int
+    - cantidad : int
+    - fechaObtencion : LocalDate
+    - fechaVencimiento : LocalDate
+  }
+  class Promocion {
+    - idPromocion : String
+    - nombre : String
+    - tipo : TipoPromocion
+    - porcentajeOValor : double
+    - fechaInicio : LocalDate
+    - fechaFin : LocalDate
+  }
+  class SolicitudRecarga {
+    - idSolicitud : String
+    - fecha : LocalDateTime
+    - monto : double
+    - estado : EstadoSolicitudRecarga
+  }
+}
+
+' =========================================================
+' 2) ENUMERACIONES (valores en lineas separadas: obligatorio)
+' =========================================================
+package "model - Enumeraciones" {
+  enum Clasificacion {
+    G
+    PG
+    PG_13
+    R
+    NC_17
+  }
+  enum CategoriaAsiento {
+    GENERAL
+    VIP
+    PREMIUM
+  }
+  enum EstadoFuncion {
+    ACTIVA
+    CANCELADA
+    FINALIZADA
+  }
+  enum EstadoCompra {
+    PENDIENTE
+    PAGADA
+    CANCELADA
+    REEMBOLSADA
+  }
+  enum EstadoTarjeta {
+    ACTIVA
+    BLOQUEADA
+  }
+  enum EstadoSolicitudRecarga {
+    PENDIENTE
+    APROBADA
+    RECHAZADA
+  }
+  enum TipoMovimiento {
+    RECARGA
+    COMPRA
+    REEMBOLSO
+    REDENCION
+  }
+  enum TipoProducto {
+    CRISPETAS
+    BEBIDA
+    DULCE
+    HOTDOG
+    NACHOS
+  }
+  enum TipoPromocion {
+    DESCUENTO_PORCENTAJE
+    DESCUENTO_MONTO
+    DOS_POR_UNO
+  }
+}
+
+' =========================================================
+' 3) RELACIONES DEL DOMINIO
+' =========================================================
+Persona <|-- Cliente
+Persona <|-- Administrador
+
+Cliente "1" --> "*" Compra : realiza
+Cliente "1" --> "1" TarjetaVirtual : posee
+Cliente "1" --> "1" CuentaPuntos : posee
+Cliente "1" --> "*" SolicitudRecarga : solicita
+CuentaPuntos "1" --> "*" PuntoAcumulado : acumula
+TarjetaVirtual "1" --> "*" Movimiento : registra
+Compra "1" --> "*" Entrada : incluye
+Entrada "*" --> "1" Funcion : para
+Entrada "*" --> "1" Asiento : ocupa
+Funcion "*" --> "1" Pelicula : proyecta
+Funcion "*" --> "1" Sala : se realiza en
+Sala "1" --> "*" Asiento : contiene
+
+Pelicula ..> Clasificacion
+Funcion ..> EstadoFuncion
+Asiento ..> CategoriaAsiento
+Compra ..> EstadoCompra
+Producto ..> TipoProducto
+Promocion ..> TipoPromocion
+TarjetaVirtual ..> EstadoTarjeta
+Movimiento ..> TipoMovimiento
+SolicitudRecarga ..> EstadoSolicitudRecarga
+
+' =========================================================
+' 4) PATRONES CREACIONALES
+' =========================================================
+package "Factory Method" {
+  abstract class IFabricaEntrada {
+    + crearEntrada(funcion, asiento) : Entrada
+  }
+  class FabricaEntrada
+}
+IFabricaEntrada <|-- FabricaEntrada
+FabricaEntrada ..> Entrada : crea
+
+package "Builder" {
+  class CompraBuilder {
+    + conEntradas(entradas) : CompraBuilder
+    + conConfiteria(items) : CompraBuilder
+    + construir() : Compra
+  }
+}
+CompraBuilder ..> Compra : construye
+
+package "Singleton" {
+  class CatalogoService {
+    - {static} instance : CatalogoService
+    + {static} getInstance() : CatalogoService
+  }
+}
+
+' =========================================================
+' 5) PATRONES ESTRUCTURALES
+' =========================================================
+package "Composite" {
+  interface IItemVendible {
+    + obtenerPrecio() : double
+    + descripcion() : String
+  }
+}
+IItemVendible <|.. Producto
+IItemVendible <|.. Combo
+Combo "1" o-- "*" IItemVendible : items
+
+package "Adapter" {
+  interface IPasarelaPago {
+    + pagarExterno(monto) : boolean
+  }
+  class PagoAdapter
+  class PasarelaExterna {
+    + realizarPago(monto) : boolean
+  }
+}
+PagoAdapter ..|> IPasarelaPago
+PagoAdapter --> PasarelaExterna : adapta
+
+package "Decorator" {
+  class ProductoConPromocion {
+    + obtenerPrecio() : double
+    + descripcion() : String
+  }
+}
+ProductoConPromocion ..|> IItemVendible
+ProductoConPromocion --> IItemVendible : envuelve
+ProductoConPromocion --> Promocion : aplica
+
+package "Facade" {
+  class CinemaFacade {
+    + {static} getInstance() : CinemaFacade
+    + comprarEntradas(...)
+    + solicitarRecarga(...)
+    + cancelarCompra(...)
+    + redimirPuntos(...)
+    + consultarCartelera()
+  }
+}
+
+' =========================================================
+' 6) PATRONES DE COMPORTAMIENTO
+' =========================================================
+package "Strategy" {
+  interface IReembolso {
+    + calcularReembolso(valor) : double
+  }
+  class ReembolsoCompleto
+  class ReembolsoParcial
+  class SinReembolso
+  interface IStrategyPuntos {
+    + calcularPuntos(monto) : int
+  }
+  class PuntosPorValor
+}
+IReembolso <|.. ReembolsoCompleto
+IReembolso <|.. ReembolsoParcial
+IReembolso <|.. SinReembolso
+IStrategyPuntos <|.. PuntosPorValor
+
+package "State" {
+  interface IEstadoCompra {
+    + pagar(compra)
+    + reembolsar(compra)
+    + cancelar(compra)
+  }
+  class EstadoPendiente
+  class EstadoPagada
+  class EstadoCancelada
+  class EstadoReembolsada
+}
+IEstadoCompra <|.. EstadoPendiente
+IEstadoCompra <|.. EstadoPagada
+IEstadoCompra <|.. EstadoCancelada
+IEstadoCompra <|.. EstadoReembolsada
+Compra --> IEstadoCompra : estado actual
+
+package "Observer" {
+  interface INotificable {
+    + actualizar(evento)
+  }
+  class NotificadorObservable {
+    + registrar(obs : INotificable)
+    + notificar(evento)
+  }
+}
+NotificadorObservable o-- "*" INotificable : observadores
+
+' =========================================================
+' 7) SERVICIOS
+' =========================================================
+package "service" {
+  class CompraService
+  class PuntoService
+  class ReembolsoService
+  class RecargaService
+  class ReporteService
+  class AuthService
+}
+
+' =========================================================
+' 8) PERSISTENCIA
+' =========================================================
+package "repository" {
+  interface Repository {
+    + guardar(entidad)
+    + cargar() : List
+  }
+  class GsonRepository
+}
+Repository <|.. GsonRepository
+
+' =========================================================
+' 9) CONTROLADORES Y VISTAS (MVC)
+' =========================================================
+package "controller" {
+  class LoginController
+  class CarteleraController
+  class CompraController
+  class AdminController
+}
+package "view" {
+  class LoginView
+  class CarteleraView
+  class CompraView
+  class AdminView
+}
+
+' =========================================================
+' 10) EXCEPCIONES
+' =========================================================
+package "excepciones" {
+  class CinemaUQException
+  class SaldoInsuficienteException
+  class AsientoNoDisponibleException
+  class FuncionNoVendibleException
+  class FechaExpiradaException
+  class MontoInvalidoException
+  class PromocionNoAplicableException
+}
+RuntimeException <|-- CinemaUQException
+CinemaUQException <|-- SaldoInsuficienteException
+CinemaUQException <|-- AsientoNoDisponibleException
+CinemaUQException <|-- FuncionNoVendibleException
+CinemaUQException <|-- FechaExpiradaException
+CinemaUQException <|-- MontoInvalidoException
+CinemaUQException <|-- PromocionNoAplicableException
+
+' =========================================================
+' 11) CONEXIONES ENTRE CAPAS / PATRONES
+' =========================================================
+CinemaFacade --> CompraService
+CinemaFacade --> PuntoService
+CinemaFacade --> RecargaService
+CinemaFacade --> ReembolsoService
+CinemaFacade --> CatalogoService
+
+CompraService --> IFabricaEntrada : usa
+CompraService --> CompraBuilder : usa
+CompraService --> IEstadoCompra : usa
+CompraService --> NotificadorObservable : notifica
+PuntoService --> IStrategyPuntos : usa
+ReembolsoService --> IReembolso : usa
+RecargaService --> IPasarelaPago : usa
+RecargaService --> NotificadorObservable : notifica
+
+CatalogoService --> Repository : persiste
+CatalogoService --> Pelicula
+CatalogoService --> Sala
+CatalogoService --> Funcion
+ReporteService --> Repository
+
+LoginController --> CinemaFacade
+CarteleraController --> CinemaFacade
+CompraController --> CinemaFacade
+AdminController --> CinemaFacade
+
+LoginView --> LoginController
+CarteleraView --> CarteleraController
+CompraView --> CompraController
+AdminView --> AdminController
+
+note bottom of CinemaFacade
+  Flujo MVC: Vista -> Controlador -> CinemaFacade
+  -> Servicios -> Repository. Las excepciones del dominio
+  viajan de vuelta al controlador (Alert).
+end note
+
+@enduml

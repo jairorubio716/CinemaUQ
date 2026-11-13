@@ -30,7 +30,7 @@
             </VBox>
             <VBox prefWidth="280" spacing="4" styleClass="panel">
                 <Label styleClass="form-label" text="MONTO PENDIENTE"/>
-                <Label fx:id="montoPendiente" styleClass="summary-total" text="$ 0"/>
+                <Label fx:id="montoPendiente" styleClass="summary-total" text="0"/>
             </VBox>
             <VBox spacing="8" styleClass="panel" HBox.hgrow="ALWAYS">
                 <Label styleClass="section-title" text="Filtrar solicitudes"/>

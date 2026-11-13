@@ -28,7 +28,7 @@
         <HBox spacing="14">
             <VBox spacing="4" styleClass="panel" HBox.hgrow="ALWAYS">
                 <Label styleClass="form-label" text="INGRESOS"/>
-                <Label fx:id="ingresos" styleClass="summary-total" text="$ 0"/>
+                <Label fx:id="ingresos" styleClass="summary-total" text="0"/>
                 <Label styleClass="hint" text="Compras pagadas"/>
             </VBox>
             <VBox spacing="4" styleClass="panel" HBox.hgrow="ALWAYS">

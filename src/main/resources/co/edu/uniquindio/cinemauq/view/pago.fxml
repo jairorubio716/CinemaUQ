@@ -56,7 +56,7 @@
                     <HBox>
                         <VBox spacing="2">
                             <Label styleClass="tarjeta-label" text="SALDO DISPONIBLE"/>
-                            <Label fx:id="tarjetaSaldo" styleClass="tarjeta-saldo" text="$ 0"/>
+                            <Label fx:id="tarjetaSaldo" styleClass="tarjeta-saldo" text="0"/>
                         </VBox>
                         <Region HBox.hgrow="ALWAYS"/>
                         <Label fx:id="tarjetaEstado" styleClass="badge-success" text="Activa"/>
