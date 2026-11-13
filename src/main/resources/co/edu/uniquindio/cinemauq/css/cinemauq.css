@@ -937,6 +937,9 @@
 .default-color2.chart-pie { -fx-pie-color: #43D9A3; }
 .default-color3.chart-pie { -fx-pie-color: #5CB8FF; }
 
+.default-color0.chart-series-line { -fx-stroke: #E5092C; }
+.default-color0.chart-line-symbol { -fx-background-color: #E5092C, #FFFFFF; }
+
 .chart-legend {
     -fx-background-color: transparent;
 }

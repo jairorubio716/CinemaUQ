@@ -35,6 +35,9 @@ import co.edu.uniquindio.cinemauq.service.FuncionService;
 import co.edu.uniquindio.cinemauq.service.PuntoService;
 import co.edu.uniquindio.cinemauq.service.RecargaService;
 import co.edu.uniquindio.cinemauq.service.ReembolsoService;
+import co.edu.uniquindio.cinemauq.service.Reporte;
+import co.edu.uniquindio.cinemauq.service.ReporteService;
+import co.edu.uniquindio.cinemauq.service.TipoReporte;
 
 import java.nio.file.Paths;
 import java.time.LocalDate;
@@ -60,6 +63,7 @@ public class CinemaFacade {
     private final RecargaService recargaService;
     private final CatalogoAdminService catalogoAdminService;
     private final FuncionService funcionService;
+    private final ReporteService reporteService;
 
     private CinemaFacade() {
         catalogo = CatalogoService.getInstance();
@@ -76,6 +80,7 @@ public class CinemaFacade {
                 new PagoAdapter(new PasarelaExterna()), notificador);
         catalogoAdminService = new CatalogoAdminService(catalogo);
         funcionService = new FuncionService(catalogo, reembolsoService);
+        reporteService = new ReporteService(catalogo);
         SeedData.inicializar(catalogo, catalogoAdminService, autenticacionService);
     }
 
@@ -351,6 +356,14 @@ public class CinemaFacade {
 
     public List<Entrada> consultarEntradasVendidas(Administrador admin) {
         return catalogoAdminService.consultarEntradasVendidas(admin);
+    }
+
+    public Reporte generarReporte(Administrador admin, TipoReporte tipo,
+                                  LocalDate inicio, LocalDate fin) {
+        if (admin == null) {
+            throw new IllegalArgumentException("Solo un administrador puede generar reportes.");
+        }
+        return reporteService.generar(tipo, inicio, fin);
     }
 
     public void guardarDatos() {

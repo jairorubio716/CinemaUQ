@@ -2,56 +2,70 @@ package co.edu.uniquindio.cinemauq.controller;
 
 import co.edu.uniquindio.cinemauq.app.AppContext;
 import co.edu.uniquindio.cinemauq.app.Dialogos;
-import co.edu.uniquindio.cinemauq.app.Formato;
 import co.edu.uniquindio.cinemauq.app.VistaController;
 import co.edu.uniquindio.cinemauq.model.Administrador;
-import co.edu.uniquindio.cinemauq.model.Compra;
-import co.edu.uniquindio.cinemauq.model.Entrada;
-import co.edu.uniquindio.cinemauq.model.EstadoCompra;
-import co.edu.uniquindio.cinemauq.model.EstadoFuncion;
-import co.edu.uniquindio.cinemauq.model.Funcion;
-import co.edu.uniquindio.cinemauq.model.IItemVendible;
+import co.edu.uniquindio.cinemauq.service.ExportadorReporte;
+import co.edu.uniquindio.cinemauq.service.Reporte;
+import co.edu.uniquindio.cinemauq.service.TipoReporte;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.chart.BarChart;
+import javafx.scene.chart.CategoryAxis;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.PieChart;
+import javafx.scene.chart.XYChart;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
+import javafx.scene.control.TabPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
 
 public class AdminReportesController implements VistaController {
 
+    @FXML private ComboBox<TipoReporte> tipoReporte;
     @FXML private DatePicker fechaInicio;
     @FXML private DatePicker fechaFin;
-    @FXML private Label ventas;
-    @FXML private Label entradas;
-    @FXML private Label confiteria;
-    @FXML private Label ocupacion;
     @FXML private Label resumen;
-    @FXML private TableView<FilaReporte> tablaReporte;
-    @FXML private TableColumn<FilaReporte, String> colReportePelicula;
-    @FXML private TableColumn<FilaReporte, String> colReporteFunciones;
-    @FXML private TableColumn<FilaReporte, String> colReporteEntradas;
-    @FXML private TableColumn<FilaReporte, String> colReporteIngresos;
+    @FXML private HBox metricas;
+    @FXML private TabPane tabs;
+    @FXML private TableView<ObservableList<String>> tablaReporte;
+    @FXML private BarChart<String, Number> graficoBarras;
+    @FXML private CategoryAxis ejeBarrasX;
+    @FXML private NumberAxis ejeBarrasY;
+    @FXML private PieChart graficoPastel;
+    @FXML private LineChart<String, Number> graficoLineas;
+    @FXML private CategoryAxis ejeLineasX;
+    @FXML private NumberAxis ejeLineasY;
+
+    private Reporte reporteActual;
 
     @FXML
     public void initialize() {
-        colReportePelicula.setCellValueFactory(cd -> new ReadOnlyStringWrapper(cd.getValue().titulo()));
-        colReporteFunciones.setCellValueFactory(cd -> new ReadOnlyStringWrapper(
-                String.valueOf(cd.getValue().funciones().size())));
-        colReporteEntradas.setCellValueFactory(cd -> new ReadOnlyStringWrapper(
-                String.valueOf(cd.getValue().entradas())));
-        colReporteIngresos.setCellValueFactory(cd -> new ReadOnlyStringWrapper(
-                Formato.moneda(cd.getValue().ingresos())));
+        tipoReporte.getItems().setAll(TipoReporte.values());
+        tipoReporte.setValue(TipoReporte.RPT_001);
+        tablaReporte.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
+        tipoReporte.setOnAction(evento -> {
+            if (fechaInicio.getValue() != null && fechaFin.getValue() != null) {
+                generar();
+            }
+        });
     }
 
     @Override
@@ -65,6 +79,9 @@ public class AdminReportesController implements VistaController {
         }
         if (fechaFin.getValue() == null) {
             fechaFin.setValue(LocalDate.now().plusDays(30));
+        }
+        if (tipoReporte.getValue() == null) {
+            tipoReporte.setValue(TipoReporte.RPT_001);
         }
         generar();
     }
@@ -81,98 +98,139 @@ public class AdminReportesController implements VistaController {
             Dialogos.error("La fecha final no puede ser anterior a la fecha inicial.");
             return;
         }
-        List<Compra> compras = AppContext.get().getFacade().consultarCompras(admin());
-        Map<String, FilaReporte> filas = new HashMap<>();
-        double totalVentas = 0;
-        double totalConfiteria = 0;
-        int totalEntradas = 0;
-
-        for (Compra compra : compras) {
-            if (compra.getEstado() != EstadoCompra.PAGADA || compra.getFecha() == null) {
-                continue;
-            }
-            LocalDate fecha = compra.getFecha().toLocalDate();
-            if (fecha.isBefore(inicio) || fecha.isAfter(fin)) {
-                continue;
-            }
-            totalVentas += compra.getTotal();
-            for (IItemVendible item : compra.getConfiteria()) {
-                totalConfiteria += item.obtenerPrecio();
-            }
-            for (Entrada entrada : compra.getEntradas()) {
-                totalEntradas++;
-                Funcion funcion = entrada.getFuncion();
-                if (funcion == null || funcion.getPelicula() == null) {
-                    continue;
-                }
-                String titulo = funcion.getPelicula().getTitulo();
-                FilaReporte fila = filas.computeIfAbsent(titulo, FilaReporte::new);
-                fila.entradas++;
-                fila.ingresos += entrada.getPrecio();
-                if (funcion.getIdFuncion() != null) {
-                    fila.funciones.add(funcion.getIdFuncion());
-                }
-            }
+        try {
+            reporteActual = AppContext.get().getFacade()
+                    .generarReporte(admin(), tipoReporte.getValue(), inicio, fin);
+            renderizar(reporteActual);
+        } catch (RuntimeException ex) {
+            Dialogos.error(ex.getMessage() == null ? "No fue posible generar el reporte." : ex.getMessage());
         }
-
-        List<FilaReporte> resultado = new ArrayList<>(filas.values());
-        resultado.sort(Comparator.comparingDouble(FilaReporte::ingresos).reversed());
-        tablaReporte.setItems(FXCollections.observableArrayList(resultado));
-        ventas.setText(Formato.moneda(totalVentas));
-        entradas.setText(String.valueOf(totalEntradas));
-        confiteria.setText(Formato.moneda(totalConfiteria));
-        ocupacion.setText(String.format("%.0f%%", ocupacionPromedio(inicio, fin)));
-        resumen.setText("Periodo: " + Formato.fecha(inicio) + "  –  " + Formato.fecha(fin)
-                + "  ·  " + resultado.size() + " películas con ventas");
     }
 
-    private double ocupacionPromedio(LocalDate inicio, LocalDate fin) {
-        double suma = 0;
-        int cuenta = 0;
-        for (Funcion funcion : AppContext.get().getFacade().getFunciones()) {
-            if (funcion.getEstado() != EstadoFuncion.EN_VENTA || funcion.getFechaHora() == null
-                    || funcion.getSala() == null || funcion.getSala().getCapacidad() <= 0) {
-                continue;
-            }
-            LocalDate fecha = funcion.getFechaHora().toLocalDate();
-            if (fecha.isBefore(inicio) || fecha.isAfter(fin)) {
-                continue;
-            }
-            suma += funcion.getAsientosVendidos() * 100.0 / funcion.getSala().getCapacidad();
-            cuenta++;
+    @FXML
+    private void exportarTxt() {
+        exportar(true);
+    }
+
+    @FXML
+    private void exportarPdf() {
+        exportar(false);
+    }
+
+    private void renderizar(Reporte reporte) {
+        cargarMetricas(reporte);
+        cargarTabla(reporte);
+        cargarGraficos(reporte);
+        resumen.setText(reporte.tipo().getCodigo() + "  ·  " + reporte.periodo()
+                + "  ·  " + reporte.filas().size() + " registros");
+    }
+
+    private void cargarMetricas(Reporte reporte) {
+        metricas.getChildren().clear();
+        for (Reporte.Metrica metrica : reporte.metricas()) {
+            Label etiqueta = new Label(metrica.etiqueta().toUpperCase(Locale.ROOT));
+            etiqueta.getStyleClass().add("form-label");
+
+            Label valor = new Label(metrica.valor());
+            valor.getStyleClass().add("summary-total");
+            valor.setWrapText(true);
+
+            VBox tarjeta = new VBox(4, etiqueta, valor);
+            tarjeta.getStyleClass().add("panel");
+            tarjeta.setMaxWidth(Double.MAX_VALUE);
+            HBox.setHgrow(tarjeta, Priority.ALWAYS);
+            metricas.getChildren().add(tarjeta);
         }
-        return cuenta == 0 ? 0 : suma / cuenta;
+    }
+
+    private void cargarTabla(Reporte reporte) {
+        tablaReporte.getColumns().clear();
+        List<String> columnas = reporte.columnas();
+        for (int i = 0; i < columnas.size(); i++) {
+            final int indice = i;
+            TableColumn<ObservableList<String>, String> columna =
+                    new TableColumn<>(columnas.get(i));
+            columna.setSortable(false);
+            columna.setCellValueFactory(cd -> new ReadOnlyStringWrapper(
+                    cd.getValue() != null && indice < cd.getValue().size()
+                            ? cd.getValue().get(indice) : ""));
+            columna.setPrefWidth(1000.0 / Math.max(1, columnas.size()));
+            tablaReporte.getColumns().add(columna);
+        }
+
+        List<ObservableList<String>> filas = new ArrayList<>();
+        for (List<String> fila : reporte.filas()) {
+            filas.add(FXCollections.observableArrayList(fila));
+        }
+        tablaReporte.setItems(FXCollections.observableArrayList(filas));
+    }
+
+    private void cargarGraficos(Reporte reporte) {
+        graficoBarras.getData().clear();
+        XYChart.Series<String, Number> barras = new XYChart.Series<>();
+        barras.setName(reporte.tipo().getTitulo());
+        for (Map.Entry<String, Double> entry : reporte.datosBarras().entrySet()) {
+            barras.getData().add(new XYChart.Data<>(entry.getKey(), entry.getValue()));
+        }
+        graficoBarras.getData().add(barras);
+        graficoBarras.setTitle(reporte.tipo().getTitulo());
+        ejeBarrasX.setLabel("Categoría");
+        ejeBarrasY.setLabel("Valor");
+
+        graficoPastel.getData().clear();
+        for (Map.Entry<String, Double> entry : reporte.datosPastel().entrySet()) {
+            graficoPastel.getData().add(new PieChart.Data(entry.getKey(), entry.getValue()));
+        }
+        graficoPastel.setTitle("Distribución");
+
+        graficoLineas.getData().clear();
+        XYChart.Series<String, Number> lineas = new XYChart.Series<>();
+        lineas.setName(reporte.tipo().getTitulo());
+        for (Reporte.PuntoLinea punto : reporte.datosLinea()) {
+            lineas.getData().add(new XYChart.Data<>(punto.etiqueta(), punto.valor()));
+        }
+        graficoLineas.getData().add(lineas);
+        graficoLineas.setTitle("Evolución");
+        ejeLineasX.setLabel("Periodo / categoría");
+        ejeLineasY.setLabel("Valor");
+    }
+
+    private void exportar(boolean textoPlano) {
+        if (reporteActual == null) {
+            Dialogos.info("Sin reporte", "Genera un reporte antes de exportarlo.");
+            return;
+        }
+        String extension = textoPlano ? ".txt" : ".pdf";
+        FileChooser selector = new FileChooser();
+        selector.setTitle(textoPlano ? "Guardar reporte TXT" : "Guardar reporte PDF");
+        selector.setInitialFileName(reporteActual.nombreArchivo() + extension);
+        selector.getExtensionFilters().add(new FileChooser.ExtensionFilter(
+                textoPlano ? "Archivo de texto (*.txt)" : "Documento PDF (*.pdf)",
+                "*" + extension));
+
+        File archivo = selector.showSaveDialog(fechaInicio.getScene().getWindow());
+        if (archivo == null) {
+            return;
+        }
+        Path destino = archivo.toPath();
+        if (!destino.getFileName().toString().toLowerCase(Locale.ROOT).endsWith(extension)) {
+            destino = Path.of(destino + extension);
+        }
+
+        try {
+            if (textoPlano) {
+                ExportadorReporte.exportarTxt(reporteActual, destino);
+            } else {
+                ExportadorReporte.exportarPdf(reporteActual, destino);
+            }
+            Dialogos.exito("Reporte exportado",
+                    "Archivo generado en:\n" + destino.toAbsolutePath());
+        } catch (IOException | RuntimeException ex) {
+            Dialogos.error("No fue posible exportar el reporte: " + ex.getMessage());
+        }
     }
 
     private Administrador admin() {
         return AppContext.get().getSesion().getAdministrador();
-    }
-
-    public static final class FilaReporte {
-
-        private final String titulo;
-        private final Set<String> funciones = new HashSet<>();
-        private int entradas;
-        private double ingresos;
-
-        public FilaReporte(String titulo) {
-            this.titulo = titulo;
-        }
-
-        public String titulo() {
-            return titulo;
-        }
-
-        public Set<String> funciones() {
-            return funciones;
-        }
-
-        public int entradas() {
-            return entradas;
-        }
-
-        public double ingresos() {
-            return ingresos;
-        }
     }
 }
