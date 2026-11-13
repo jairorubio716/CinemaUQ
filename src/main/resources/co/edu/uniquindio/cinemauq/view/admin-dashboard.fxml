@@ -83,6 +83,7 @@
             <VBox prefWidth="280" spacing="10" styleClass="panel">
                 <Label styleClass="section-title" text="Acciones rápidas"/>
                 <Button maxWidth="Infinity" onAction="#irCatalogo" styleClass="primary-button" text="Gestionar catálogo"/>
+                <Button maxWidth="Infinity" onAction="#irClientes" styleClass="secondary-button" text="Clientes y compras"/>
                 <Button maxWidth="Infinity" onAction="#irFunciones" styleClass="secondary-button" text="Programar funciones"/>
                 <Button maxWidth="Infinity" onAction="#irRecargas" styleClass="secondary-button" text="Revisar recargas"/>
                 <Separator/>

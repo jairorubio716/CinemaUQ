@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<ScrollPane fitToWidth="true" styleClass="scroll-pane" xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="co.edu.uniquindio.cinemauq.controller.AdminClientesController">
+    <VBox styleClass="page" spacing="16">
+        <HBox alignment="CENTER_LEFT" spacing="12">
+            <VBox spacing="3">
+                <Label styleClass="page-title" text="Clientes y compras"/>
+                <Label styleClass="page-subtitle"
+                       text="Consulta los clientes registrados y el historial completo de compras."/>
+            </VBox>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Button onAction="#actualizar" styleClass="ghost-button" text="Actualizar"/>
+        </HBox>
+
+        <HBox spacing="14">
+            <VBox spacing="4" styleClass="panel" HBox.hgrow="ALWAYS">
+                <Label styleClass="form-label" text="CLIENTES"/>
+                <Label fx:id="totalClientes" styleClass="summary-total" text="0"/>
+                <Label styleClass="hint" text="Registrados"/>
+            </VBox>
+            <VBox spacing="4" styleClass="panel" HBox.hgrow="ALWAYS">
+                <Label styleClass="form-label" text="CON TARJETA"/>
+                <Label fx:id="clientesConTarjeta" styleClass="summary-total" text="0"/>
+                <Label styleClass="hint" text="Tarjeta virtual activa"/>
+            </VBox>
+            <VBox spacing="4" styleClass="panel" HBox.hgrow="ALWAYS">
+                <Label styleClass="form-label" text="COMPRAS"/>
+                <Label fx:id="totalCompras" styleClass="summary-total" text="0"/>
+                <Label styleClass="hint" text="Historial total"/>
+            </VBox>
+            <VBox spacing="4" styleClass="panel" HBox.hgrow="ALWAYS">
+                <Label styleClass="form-label" text="INGRESOS"/>
+                <Label fx:id="ingresos" styleClass="summary-total" text="0"/>
+                <Label styleClass="hint" text="Compras pagadas"/>
+            </VBox>
+        </HBox>
+
+        <VBox spacing="8" styleClass="panel">
+            <HBox alignment="CENTER_LEFT" spacing="10">
+                <Label styleClass="section-title" text="Clientes registrados"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Label fx:id="resumenClientes" styleClass="hint" text="0 clientes registrados"/>
+            </HBox>
+            <TableView fx:id="tablaClientes" prefHeight="260" styleClass="table-view">
+                <columns>
+                    <TableColumn fx:id="colClienteId" prefWidth="100" text="ID"/>
+                    <TableColumn fx:id="colClienteNombre" prefWidth="190" text="Nombre"/>
+                    <TableColumn fx:id="colClienteUsuario" prefWidth="110" text="Usuario"/>
+                    <TableColumn fx:id="colClienteEmail" prefWidth="210" text="Email"/>
+                    <TableColumn fx:id="colClienteTarjeta" prefWidth="140" text="Tarjeta"/>
+                    <TableColumn fx:id="colClienteSaldo" prefWidth="110" text="Saldo"/>
+                    <TableColumn fx:id="colClientePuntos" prefWidth="80" text="Puntos"/>
+                    <TableColumn fx:id="colClienteCompras" prefWidth="90" text="Compras"/>
+                </columns>
+                <placeholder>
+                    <Label styleClass="empty-text" text="No hay clientes registrados."/>
+                </placeholder>
+            </TableView>
+        </VBox>
+
+        <VBox spacing="8" styleClass="panel">
+            <HBox alignment="CENTER_LEFT" spacing="10">
+                <Label styleClass="section-title" text="Historial de compras"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Label fx:id="resumenCompras" styleClass="hint" text="0 compras en total"/>
+            </HBox>
+            <TableView fx:id="tablaCompras" prefHeight="340" styleClass="table-view">
+                <columns>
+                    <TableColumn fx:id="colCompraId" prefWidth="150" text="Compra"/>
+                    <TableColumn fx:id="colCompraCliente" prefWidth="210" text="Cliente"/>
+                    <TableColumn fx:id="colCompraFecha" prefWidth="190" text="Fecha"/>
+                    <TableColumn fx:id="colCompraEntradas" prefWidth="90" text="Entradas"/>
+                    <TableColumn fx:id="colCompraConfiteria" prefWidth="100" text="Confitería"/>
+                    <TableColumn fx:id="colCompraTotal" prefWidth="120" text="Total"/>
+                    <TableColumn fx:id="colCompraEstado" prefWidth="120" text="Estado"/>
+                </columns>
+                <placeholder>
+                    <Label styleClass="empty-text" text="No hay compras registradas."/>
+                </placeholder>
+            </TableView>
+        </VBox>
+    </VBox>
+</ScrollPane>

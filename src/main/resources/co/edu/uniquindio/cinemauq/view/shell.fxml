@@ -42,6 +42,7 @@
             <VBox fx:id="sidebar" prefWidth="236" spacing="6" styleClass="sidebar">
                 <Label styleClass="sidebar-title" text="PANEL ADMIN"/>
                 <Button fx:id="btnDashboard" maxWidth="Infinity" onAction="#irDashboard" styleClass="sidebar-button" text="Dashboard"/>
+                <Button fx:id="btnClientes" maxWidth="Infinity" onAction="#irClientes" styleClass="sidebar-button" text="Clientes y compras"/>
                 <Button fx:id="btnCatalogo" maxWidth="Infinity" onAction="#irCatalogo" styleClass="sidebar-button" text="Catálogo"/>
                 <Button fx:id="btnFunciones" maxWidth="Infinity" onAction="#irFuncionesAdmin" styleClass="sidebar-button" text="Funciones"/>
                 <Button fx:id="btnRecargas" maxWidth="Infinity" onAction="#irRecargas" styleClass="sidebar-button" text="Recargas"/>

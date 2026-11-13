@@ -32,6 +32,7 @@ public class ShellController {
     @FXML private Button btnPuntos;
     @FXML private Button btnMaximizar;
     @FXML private Button btnDashboard;
+    @FXML private Button btnClientes;
     @FXML private Button btnCatalogo;
     @FXML private Button btnFunciones;
     @FXML private Button btnRecargas;
@@ -54,6 +55,7 @@ public class ShellController {
         botones.put("tarjeta", btnTarjeta);
         botones.put("puntos", btnPuntos);
         botones.put("admin-dashboard", btnDashboard);
+        botones.put("admin-clientes", btnClientes);
         botones.put("admin-catalogo", btnCatalogo);
         botones.put("admin-funciones", btnFunciones);
         botones.put("admin-recargas", btnRecargas);
@@ -137,6 +139,11 @@ public class ShellController {
     @FXML
     private void irDashboard() {
         AppContext.get().getNavegacion().irA("admin-dashboard");
+    }
+
+    @FXML
+    private void irClientes() {
+        AppContext.get().getNavegacion().irA("admin-clientes");
     }
 
     @FXML

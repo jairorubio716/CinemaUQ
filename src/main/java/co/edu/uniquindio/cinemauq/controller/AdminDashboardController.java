@@ -161,6 +161,11 @@ public class AdminDashboardController implements VistaController {
     }
 
     @FXML
+    private void irClientes() {
+        AppContext.get().getNavegacion().irA("admin-clientes");
+    }
+
+    @FXML
     private void irFunciones() {
         AppContext.get().getNavegacion().irA("admin-funciones");
     }

@@ -110,6 +110,14 @@ package "model - Dominio" {
     - monto : double
     - estado : EstadoSolicitudRecarga
   }
+  class Redencion {
+    - idRedencion : String
+    - codigo : String
+    - beneficio : String
+    - puntos : int
+    - fecha : LocalDateTime
+    - idCliente : String
+  }
 }
 
 ' =========================================================
@@ -129,7 +137,8 @@ package "model - Enumeraciones" {
     PREMIUM
   }
   enum EstadoFuncion {
-    ACTIVA
+    PROGRAMADA
+    EN_VENTA
     CANCELADA
     FINALIZADA
   }
@@ -141,6 +150,7 @@ package "model - Enumeraciones" {
   }
   enum EstadoTarjeta {
     ACTIVA
+    INACTIVA
     BLOQUEADA
   }
   enum EstadoSolicitudRecarga {
@@ -178,6 +188,7 @@ Cliente "1" --> "*" Compra : realiza
 Cliente "1" --> "1" TarjetaVirtual : posee
 Cliente "1" --> "1" CuentaPuntos : posee
 Cliente "1" --> "*" SolicitudRecarga : solicita
+Cliente "1" --> "*" Redencion : canjea
 CuentaPuntos "1" --> "*" PuntoAcumulado : acumula
 TarjetaVirtual "1" --> "*" Movimiento : registra
 Compra "1" --> "*" Entrada : incluye
@@ -323,40 +334,83 @@ NotificadorObservable o-- "*" INotificable : observadores
 ' 7) SERVICIOS
 ' =========================================================
 package "service" {
+  class AutenticacionService
+  class CatalogoService
+  class CatalogoAdminService
+  class FuncionService
   class CompraService
   class PuntoService
   class ReembolsoService
   class RecargaService
   class ReporteService
-  class AuthService
+  class ExportadorReporte
+  class CotizacionCompra
+  class Reporte
+  enum TipoReporte
 }
 
 ' =========================================================
 ' 8) PERSISTENCIA
 ' =========================================================
 package "repository" {
-  interface Repository {
-    + guardar(entidad)
-    + cargar() : List
+  class DatosCinema {
+    + peliculas : List
+    + salas : List
+    + funciones : List
+    + clientes : List
+    + compras : List
+    + redenciones : List
   }
-  class GsonRepository
+  class RepositorioDatos {
+    + cargar() : DatosCinema
+    + guardar(datos)
+  }
+  class AdaptadorLocalDate
+  class AdaptadorLocalDateTime
+  class AdaptadorItemVendible
 }
-Repository <|.. GsonRepository
+RepositorioDatos --> DatosCinema : contiene
 
 ' =========================================================
 ' 9) CONTROLADORES Y VISTAS (MVC)
 ' =========================================================
 package "controller" {
   class LoginController
+  class ShellController
   class CarteleraController
-  class CompraController
-  class AdminController
+  class PeliculaController
+  class AsientosController
+  class ConfiteriaController
+  class PagoController
+  class ConfirmacionController
+  class MisComprasController
+  class TarjetaController
+  class PuntosController
+  class AdminDashboardController
+  class AdminClientesController
+  class AdminCatalogoController
+  class AdminFuncionesController
+  class AdminRecargasController
+  class AdminReportesController
 }
-package "view" {
-  class LoginView
-  class CarteleraView
-  class CompraView
-  class AdminView
+package "view - FXML" {
+  class "login.fxml" as LoginView
+  class "shell.fxml" as ShellView
+  class "cartelera.fxml" as CarteleraView
+  class "pelicula.fxml" as PeliculaView
+  class "asientos.fxml" as AsientosView
+  class "confiteria.fxml" as ConfiteriaView
+  class "pago.fxml" as PagoView
+  class "confirmacion.fxml" as ConfirmacionView
+  class "mis-compras.fxml" as MisComprasView
+  class "tarjeta.fxml" as TarjetaView
+  class "puntos.fxml" as PuntosView
+  class "admin-dashboard.fxml" as AdminDashboardView
+  class "admin-clientes.fxml" as AdminClientesView
+  class "admin-catalogo.fxml" as AdminCatalogoView
+  class "admin-funciones.fxml" as AdminFuncionesView
+  class "admin-recargas.fxml" as AdminRecargasView
+  class "admin-reportes.fxml" as AdminReportesView
 }
 
 ' =========================================================
@@ -387,6 +441,10 @@ CinemaFacade --> PuntoService
 CinemaFacade --> RecargaService
 CinemaFacade --> ReembolsoService
 CinemaFacade --> CatalogoService
+CinemaFacade --> CatalogoAdminService
+CinemaFacade --> FuncionService
+CinemaFacade --> AutenticacionService
+CinemaFacade --> ReporteService
 
 CompraService --> IFabricaEntrada : usa
 CompraService --> CompraBuilder : usa
@@ -397,25 +455,52 @@ ReembolsoService --> IReembolso : usa
 RecargaService --> IPasarelaPago : usa
 RecargaService --> NotificadorObservable : notifica
 
-CatalogoService --> Repository : persiste
+CatalogoService --> RepositorioDatos : persiste
 CatalogoService --> Pelicula
 CatalogoService --> Sala
 CatalogoService --> Funcion
-ReporteService --> Repository
+ReporteService --> RepositorioDatos
+ExportadorReporte --> Reporte
 
 LoginController --> CinemaFacade
+ShellController --> CinemaFacade
 CarteleraController --> CinemaFacade
-CompraController --> CinemaFacade
-AdminController --> CinemaFacade
+PeliculaController --> CinemaFacade
+AsientosController --> CinemaFacade
+ConfiteriaController --> CinemaFacade
+PagoController --> CinemaFacade
+ConfirmacionController --> CinemaFacade
+MisComprasController --> CinemaFacade
+TarjetaController --> CinemaFacade
+PuntosController --> CinemaFacade
+AdminDashboardController --> CinemaFacade
+AdminClientesController --> CinemaFacade
+AdminCatalogoController --> CinemaFacade
+AdminFuncionesController --> CinemaFacade
+AdminRecargasController --> CinemaFacade
+AdminReportesController --> CinemaFacade
 
 LoginView --> LoginController
+ShellView --> ShellController
 CarteleraView --> CarteleraController
-CompraView --> CompraController
-AdminView --> AdminController
+PeliculaView --> PeliculaController
+AsientosView --> AsientosController
+ConfiteriaView --> ConfiteriaController
+PagoView --> PagoController
+ConfirmacionView --> ConfirmacionController
+MisComprasView --> MisComprasController
+TarjetaView --> TarjetaController
+PuntosView --> PuntosController
+AdminDashboardView --> AdminDashboardController
+AdminClientesView --> AdminClientesController
+AdminCatalogoView --> AdminCatalogoController
+AdminFuncionesView --> AdminFuncionesController
+AdminRecargasView --> AdminRecargasController
+AdminReportesView --> AdminReportesController
 
 note bottom of CinemaFacade
-  Flujo MVC: Vista -> Controlador -> CinemaFacade
-  -> Servicios -> Repository. Las excepciones del dominio
+  Flujo MVC: Vista FXML -> Controlador -> CinemaFacade
+  -> Servicios -> RepositorioDatos. Las excepciones del dominio
   viajan de vuelta al controlador (Alert).
 end note
 
