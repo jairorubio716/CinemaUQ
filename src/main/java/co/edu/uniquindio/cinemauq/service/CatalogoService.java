@@ -9,6 +9,7 @@ import co.edu.uniquindio.cinemauq.model.Funcion;
 import co.edu.uniquindio.cinemauq.model.Pelicula;
 import co.edu.uniquindio.cinemauq.model.Producto;
 import co.edu.uniquindio.cinemauq.model.Promocion;
+import co.edu.uniquindio.cinemauq.model.Redencion;
 import co.edu.uniquindio.cinemauq.model.Sala;
 import co.edu.uniquindio.cinemauq.model.SolicitudRecarga;
 import co.edu.uniquindio.cinemauq.model.TarjetaVirtual;
@@ -16,6 +17,7 @@ import co.edu.uniquindio.cinemauq.repository.DatosCinema;
 import co.edu.uniquindio.cinemauq.repository.RepositorioDatos;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -35,6 +37,7 @@ public class CatalogoService {
     private List<Promocion> promociones = new ArrayList<>();
     private List<Compra> compras = new ArrayList<>();
     private List<SolicitudRecarga> solicitudesRecarga = new ArrayList<>();
+    private List<Redencion> redenciones = new ArrayList<>();
     private int secuenciaMovimiento = 1;
 
     private RepositorioDatos repositorio;
@@ -137,6 +140,14 @@ public class CatalogoService {
         this.solicitudesRecarga = solicitudesRecarga != null ? solicitudesRecarga : new ArrayList<>();
     }
 
+    public List<Redencion> getRedenciones() {
+        return redenciones;
+    }
+
+    public void setRedenciones(List<Redencion> redenciones) {
+        this.redenciones = redenciones != null ? redenciones : new ArrayList<>();
+    }
+
     public int getSecuenciaMovimiento() {
         return secuenciaMovimiento;
     }
@@ -210,6 +221,24 @@ public class CatalogoService {
         if (solicitud != null && !solicitudesRecarga.contains(solicitud)) {
             solicitudesRecarga.add(solicitud);
         }
+    }
+
+    public void agregarRedencion(Redencion redencion) {
+        if (redencion != null && !redenciones.contains(redencion)) {
+            redenciones.add(redencion);
+        }
+    }
+
+    public List<Redencion> redencionesDeCliente(String idCliente) {
+        List<Redencion> resultado = new ArrayList<>();
+        for (Redencion redencion : redenciones) {
+            if (redencion.getIdCliente() != null && redencion.getIdCliente().equals(idCliente)) {
+                resultado.add(redencion);
+            }
+        }
+        resultado.sort(Comparator.comparing(Redencion::getFecha,
+                Comparator.nullsLast(Comparator.naturalOrder())).reversed());
+        return resultado;
     }
 
     public List<Pelicula> peliculasEnCartelera() {
@@ -346,6 +375,7 @@ public class CatalogoService {
         datos.promociones = promociones;
         datos.compras = compras;
         datos.solicitudesRecarga = solicitudesRecarga;
+        datos.redenciones = redenciones;
         datos.secuenciaMovimiento = secuenciaMovimiento;
         repositorio.guardar(datos);
     }
@@ -365,6 +395,7 @@ public class CatalogoService {
         this.promociones = datos.promociones != null ? datos.promociones : new ArrayList<>();
         this.compras = datos.compras != null ? datos.compras : new ArrayList<>();
         this.solicitudesRecarga = datos.solicitudesRecarga != null ? datos.solicitudesRecarga : new ArrayList<>();
+        this.redenciones = datos.redenciones != null ? datos.redenciones : new ArrayList<>();
         this.secuenciaMovimiento = Math.max(1, datos.secuenciaMovimiento);
         reconstruirRelaciones();
     }

@@ -42,6 +42,10 @@ public class PuntoService {
         return puntos;
     }
 
+    public int calcularPuntos(double monto) {
+        return estrategia.calcularPuntos(monto);
+    }
+
     public int totalVigente(Cliente cliente) {
         if (cliente == null || cliente.getCuentaPuntos() == null) {
             return 0;

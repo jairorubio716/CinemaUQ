@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane styleClass="page" xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="co.edu.uniquindio.cinemauq.controller.AsientosController">
+    <top>
+        <VBox spacing="4">
+            <Button maxWidth="160" onAction="#volver" styleClass="ghost-button" text="← Cambiar función"/>
+            <Label fx:id="tituloPelicula" styleClass="page-title" text="Película"/>
+            <Label fx:id="infoFuncion" styleClass="page-subtitle" text="Función"/>
+        </VBox>
+    </top>
+    <center>
+        <HBox spacing="22" style="-fx-padding: 18 0 0 0;">
+            <VBox spacing="12" styleClass="cinema-room" HBox.hgrow="ALWAYS">
+                <StackPane alignment="CENTER">
+                    <Region prefHeight="14" prefWidth="520" styleClass="screen"/>
+                </StackPane>
+                <Label alignment="CENTER" maxWidth="Infinity" styleClass="screen-label" text="PANTALLA"/>
+                <ScrollPane fx:id="scrollMapa" fitToHeight="true" fitToWidth="false" pannable="true"
+                            prefHeight="430" styleClass="scroll-pane">
+                    <GridPane fx:id="mapa"/>
+                </ScrollPane>
+                <HBox fx:id="leyenda" alignment="CENTER" spacing="16"/>
+                <HBox alignment="CENTER" spacing="8">
+                    <Button onAction="#zoomOut" styleClass="icon-button" text="−"/>
+                    <Button onAction="#zoomReset" styleClass="ghost-button" text="100%"/>
+                    <Button onAction="#zoomIn" styleClass="icon-button" text="+"/>
+                </HBox>
+            </VBox>
+
+            <VBox fx:id="resumen" prefWidth="320" styleClass="summary">
+                <Label styleClass="section-title" text="Tu selección"/>
+                <Label fx:id="resumenFuncion" styleClass="summary-row" wrapText="true"/>
+                <Separator/>
+                <Label styleClass="form-label" text="ASIENTOS"/>
+                <Label fx:id="asientosTexto" styleClass="summary-row" wrapText="true"/>
+                <Region prefHeight="6"/>
+                <HBox>
+                    <Label styleClass="summary-row" text="Entradas"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Label fx:id="totalEntradas" styleClass="function-price"/>
+                </HBox>
+                <Separator/>
+                <HBox alignment="CENTER_LEFT">
+                    <Label styleClass="summary-row" text="Total"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Label fx:id="total" styleClass="summary-total"/>
+                </HBox>
+                <Button fx:id="btnContinuar" maxWidth="Infinity" onAction="#continuar"
+                        styleClass="primary-button" text="Continuar a confitería"/>
+                <Button maxWidth="Infinity" onAction="#volver" styleClass="ghost-button" text="Volver"/>
+            </VBox>
+        </HBox>
+    </center>
+</BorderPane>

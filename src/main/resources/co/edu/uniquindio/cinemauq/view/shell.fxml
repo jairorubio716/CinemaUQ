@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<StackPane fx:id="raiz" styleClass="app-root" xmlns="http://javafx.com/javafx/21"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="co.edu.uniquindio.cinemauq.controller.ShellController">
+    <BorderPane fx:id="shell">
+        <top>
+            <VBox>
+                <HBox fx:id="windowBar" alignment="CENTER_LEFT" spacing="6" styleClass="window-bar">
+                    <Label styleClass="window-title" text="CINEMA UQ"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Button onAction="#minimizar" styleClass="window-button" text="–"/>
+                    <Button fx:id="btnMaximizar" onAction="#maximizar" styleClass="window-button" text="□"/>
+                    <Button onAction="#cerrar" styleClass="window-button window-close" text="✕"/>
+                </HBox>
+                <HBox fx:id="barraSuperior" alignment="CENTER_LEFT" spacing="18" styleClass="topbar">
+                <Button onAction="#irInicio" styleClass="brand-button" text="CinemaUQ"/>
+                <HBox fx:id="navCliente" alignment="CENTER_LEFT" spacing="4">
+                    <Button fx:id="btnCartelera" onAction="#irCartelera" styleClass="nav-button" text="Cartelera"/>
+                    <Button fx:id="btnMisCompras" onAction="#irMisCompras" styleClass="nav-button" text="Mis compras"/>
+                    <Button fx:id="btnTarjeta" onAction="#irTarjeta" styleClass="nav-button" text="Mi tarjeta"/>
+                    <Button fx:id="btnPuntos" onAction="#irPuntos" styleClass="nav-button" text="Mis puntos"/>
+                </HBox>
+                <Region HBox.hgrow="ALWAYS"/>
+                <VBox alignment="CENTER_RIGHT" spacing="1">
+                    <Label fx:id="usuarioLabel" styleClass="topbar-usuario"/>
+                    <Label fx:id="rolLabel" styleClass="topbar-rol"/>
+                </VBox>
+                <Button onAction="#salir" styleClass="ghost-button" text="Salir"/>
+                </HBox>
+            </VBox>
+        </top>
+        <left>
+            <VBox fx:id="sidebar" prefWidth="236" spacing="6" styleClass="sidebar">
+                <Label styleClass="sidebar-title" text="PANEL ADMIN"/>
+                <Button fx:id="btnDashboard" maxWidth="Infinity" onAction="#irDashboard" styleClass="sidebar-button" text="Dashboard"/>
+                <Button fx:id="btnCatalogo" maxWidth="Infinity" onAction="#irCatalogo" styleClass="sidebar-button" text="Catálogo"/>
+                <Button fx:id="btnFunciones" maxWidth="Infinity" onAction="#irFuncionesAdmin" styleClass="sidebar-button" text="Funciones"/>
+                <Button fx:id="btnRecargas" maxWidth="Infinity" onAction="#irRecargas" styleClass="sidebar-button" text="Recargas"/>
+                <Button fx:id="btnReportes" maxWidth="Infinity" onAction="#irReportes" styleClass="sidebar-button" text="Reportes"/>
+                <Region VBox.vgrow="ALWAYS"/>
+                <Label styleClass="sidebar-footer" text="CinemaUQ · v1.0"/>
+            </VBox>
+        </left>
+        <center>
+            <StackPane fx:id="contenido" styleClass="content"/>
+        </center>
+    </BorderPane>
+    <VBox fx:id="toastLayer" alignment="BOTTOM_RIGHT" mouseTransparent="true" styleClass="toast-layer"
+          StackPane.alignment="BOTTOM_RIGHT"/>
+</StackPane>

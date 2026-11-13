@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane styleClass="page" xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="co.edu.uniquindio.cinemauq.controller.PagoController">
+    <top>
+        <VBox spacing="4">
+            <Button maxWidth="190" onAction="#volver" styleClass="ghost-button" text="← Volver a confitería"/>
+            <Label styleClass="page-title" text="Pago"/>
+            <Label styleClass="page-subtitle" text="Revisa el detalle y paga con tu tarjeta virtual CinemaUQ."/>
+        </VBox>
+    </top>
+    <center>
+        <HBox spacing="22" style="-fx-padding: 18 0 0 0;">
+            <VBox spacing="14" styleClass="panel" HBox.hgrow="ALWAYS">
+                <Label styleClass="section-title" text="Resumen de tu compra"/>
+                <Label fx:id="resumenFuncion" styleClass="summary-row" wrapText="true"/>
+                <Separator/>
+                <VBox fx:id="resumenItems" spacing="8"/>
+                <Separator/>
+                <HBox>
+                    <Label styleClass="summary-row" text="Subtotal"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Label fx:id="subtotal" styleClass="function-price"/>
+                </HBox>
+                <HBox fx:id="filaDescuento" alignment="CENTER_LEFT" managed="false" visible="false">
+                    <Label styleClass="summary-row" text="Descuento aplicado"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Label fx:id="descuento" styleClass="kpi-note"/>
+                </HBox>
+                <HBox alignment="CENTER_LEFT">
+                    <Label styleClass="summary-row" text="Total a pagar"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Label fx:id="total" styleClass="summary-total"/>
+                </HBox>
+                <Label fx:id="puntos" styleClass="kpi-note" wrapText="true"/>
+                <Separator/>
+                <Label styleClass="section-title" text="Promociones aplicadas"/>
+                <VBox fx:id="promociones" spacing="6"/>
+            </VBox>
+
+            <VBox prefWidth="360" spacing="14" styleClass="summary">
+                <Label styleClass="section-title" text="Tarjeta virtual"/>
+                <VBox spacing="8" styleClass="tarjeta-visual">
+                    <Label styleClass="tarjeta-kicker" text="CINEMA UQ"/>
+                    <Label fx:id="tarjetaNumero" styleClass="tarjeta-numero" text="•••• •••• •••• ----"/>
+                    <Region VBox.vgrow="ALWAYS"/>
+                    <HBox>
+                        <VBox spacing="2">
+                            <Label styleClass="tarjeta-label" text="SALDO DISPONIBLE"/>
+                            <Label fx:id="tarjetaSaldo" styleClass="tarjeta-saldo" text="$ 0"/>
+                        </VBox>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Label fx:id="tarjetaEstado" styleClass="badge-success" text="Activa"/>
+                    </HBox>
+                </VBox>
+                <Label fx:id="alertaSaldo" styleClass="form-error" wrapText="true"/>
+                <Button fx:id="btnPagar" maxWidth="Infinity" onAction="#pagar"
+                        styleClass="primary-button" text="Pagar ahora"/>
+                <Button maxWidth="Infinity" onAction="#volver" styleClass="ghost-button" text="Volver"/>
+                <Label styleClass="hint" wrapText="true"
+                       text="El pago se descuenta de tu tarjeta virtual. Las promociones se aplican automáticamente sobre productos y combos."/>
+            </VBox>
+        </HBox>
+    </center>
+</BorderPane>

@@ -22,7 +22,9 @@ import co.edu.uniquindio.cinemauq.patrones.observer.NotificadorObservable;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 public class CompraService {
@@ -74,12 +76,7 @@ public class CompraService {
             builder.conEntrada(entrada);
         }
         for (IItemVendible item : items) {
-            Promocion aplicable = buscarPromocionAplicable(item, promos);
-            if (aplicable != null) {
-                builder.conItem(new ProductoConPromocion(item, aplicable));
-            } else {
-                builder.conItem(item);
-            }
+            builder.conItem(aplicarPromocion(item, promos));
         }
         for (Promocion promocion : promos) {
             builder.conPromocion(promocion);
@@ -101,6 +98,49 @@ public class CompraService {
                 + total + ". Puntos ganados: " + puntosGanados + ".");
         catalogo.guardar();
         return compra;
+    }
+
+    public CotizacionCompra cotizar(Funcion funcion, List<Asiento> asientos,
+                                    List<IItemVendible> confiteria, List<Promocion> promociones) {
+        List<Asiento> asientosCotizados = asientos != null ? asientos : List.of();
+        List<IItemVendible> items = confiteria != null ? confiteria : List.of();
+        List<Promocion> promos = promociones != null ? promociones : List.of();
+
+        double subtotalEntradas = funcion != null
+                ? funcion.getPrecioEntrada() * asientosCotizados.size() : 0;
+        Map<IItemVendible, Integer> cantidades = new LinkedHashMap<>();
+        for (IItemVendible item : items) {
+            if (item != null) {
+                cantidades.merge(item, 1, Integer::sum);
+            }
+        }
+
+        List<CotizacionCompra.LineaConfiteria> lineas = new ArrayList<>();
+        double subtotalConfiteria = 0;
+        double totalConfiteria = 0;
+        for (Map.Entry<IItemVendible, Integer> entrada : cantidades.entrySet()) {
+            IItemVendible item = entrada.getKey();
+            int cantidad = entrada.getValue();
+            IItemVendible aplicado = aplicarPromocion(item, promos);
+            Promocion promocion = aplicado instanceof ProductoConPromocion decorado
+                    ? decorado.getPromocion() : null;
+            double precioBase = item.obtenerPrecio();
+            double precioFinal = aplicado.obtenerPrecio();
+            lineas.add(new CotizacionCompra.LineaConfiteria(
+                    item, cantidad, precioBase, precioFinal, promocion));
+            subtotalConfiteria += precioBase * cantidad;
+            totalConfiteria += precioFinal * cantidad;
+        }
+
+        double subtotal = subtotalEntradas + subtotalConfiteria;
+        double total = Math.max(0, subtotalEntradas + totalConfiteria);
+        double descuento = Math.max(0, subtotal - total);
+        return new CotizacionCompra(subtotal, descuento, total, lineas);
+    }
+
+    private IItemVendible aplicarPromocion(IItemVendible item, List<Promocion> promociones) {
+        Promocion aplicable = buscarPromocionAplicable(item, promociones);
+        return aplicable != null ? new ProductoConPromocion(item, aplicable) : item;
     }
 
     private void validarAforo(Funcion funcion, List<Asiento> asientos) {
@@ -133,7 +173,7 @@ public class CompraService {
     }
 
     private Promocion buscarPromocionAplicable(IItemVendible item, List<Promocion> promociones) {
-        if (item == null) {
+        if (item == null || promociones == null) {
             return null;
         }
         for (Promocion promocion : promociones) {

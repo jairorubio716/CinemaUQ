@@ -14,6 +14,7 @@ import co.edu.uniquindio.cinemauq.model.Pelicula;
 import co.edu.uniquindio.cinemauq.model.Persona;
 import co.edu.uniquindio.cinemauq.model.Producto;
 import co.edu.uniquindio.cinemauq.model.Promocion;
+import co.edu.uniquindio.cinemauq.model.Redencion;
 import co.edu.uniquindio.cinemauq.model.Sala;
 import co.edu.uniquindio.cinemauq.model.SolicitudRecarga;
 import co.edu.uniquindio.cinemauq.model.TipoProducto;
@@ -24,10 +25,12 @@ import co.edu.uniquindio.cinemauq.patrones.factory.FabricaEntrada;
 import co.edu.uniquindio.cinemauq.patrones.observer.NotificadorObservable;
 import co.edu.uniquindio.cinemauq.patrones.strategy.PuntosPorValor;
 import co.edu.uniquindio.cinemauq.repository.RepositorioDatos;
+import co.edu.uniquindio.cinemauq.seed.SeedData;
 import co.edu.uniquindio.cinemauq.service.AutenticacionService;
 import co.edu.uniquindio.cinemauq.service.CatalogoAdminService;
 import co.edu.uniquindio.cinemauq.service.CatalogoService;
 import co.edu.uniquindio.cinemauq.service.CompraService;
+import co.edu.uniquindio.cinemauq.service.CotizacionCompra;
 import co.edu.uniquindio.cinemauq.service.FuncionService;
 import co.edu.uniquindio.cinemauq.service.PuntoService;
 import co.edu.uniquindio.cinemauq.service.RecargaService;
@@ -39,6 +42,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * Facade: único punto de acceso a la lógica de negocio para controladores/vistas.
@@ -72,6 +76,7 @@ public class CinemaFacade {
                 new PagoAdapter(new PasarelaExterna()), notificador);
         catalogoAdminService = new CatalogoAdminService(catalogo);
         funcionService = new FuncionService(catalogo, reembolsoService);
+        SeedData.inicializar(catalogo, catalogoAdminService, autenticacionService);
     }
 
     public static synchronized CinemaFacade getInstance() {
@@ -117,6 +122,38 @@ public class CinemaFacade {
         return funcionService;
     }
 
+    public List<Pelicula> getPeliculas() {
+        return new ArrayList<>(catalogo.getPeliculas());
+    }
+
+    public List<Sala> getSalas() {
+        return new ArrayList<>(catalogo.getSalas());
+    }
+
+    public List<Funcion> getFunciones() {
+        return new ArrayList<>(catalogo.getFunciones());
+    }
+
+    public List<Producto> getProductos() {
+        return new ArrayList<>(catalogo.getProductos());
+    }
+
+    public List<Combo> getCombos() {
+        return new ArrayList<>(catalogo.getCombos());
+    }
+
+    public List<Promocion> getPromociones() {
+        return new ArrayList<>(catalogo.getPromociones());
+    }
+
+    public List<SolicitudRecarga> getSolicitudesRecarga() {
+        return new ArrayList<>(catalogo.getSolicitudesRecarga());
+    }
+
+    public List<Cliente> getClientes() {
+        return new ArrayList<>(catalogo.getClientes());
+    }
+
     public Persona iniciarSesion(String usuario, String contrasena) {
         return autenticacionService.iniciarSesion(usuario, contrasena);
     }
@@ -141,6 +178,16 @@ public class CinemaFacade {
     public Compra comprar(Cliente cliente, Funcion funcion, List<Asiento> asientos,
                           List<IItemVendible> confiteria, List<Promocion> promociones) {
         return compraService.comprar(cliente, funcion, asientos, confiteria, promociones);
+    }
+
+    public CotizacionCompra cotizarCompra(Funcion funcion, List<Asiento> asientos,
+                                          List<IItemVendible> confiteria,
+                                          List<Promocion> promociones) {
+        return compraService.cotizar(funcion, asientos, confiteria, promociones);
+    }
+
+    public int calcularPuntos(double monto) {
+        return puntoService.calcularPuntos(monto);
     }
 
     public double cancelarCompra(Compra compra) {
@@ -187,7 +234,21 @@ public class CinemaFacade {
     }
 
     public int redimirBeneficio(Cliente cliente, String beneficio) {
-        return puntoService.redimirBeneficio(cliente, beneficio);
+        int puntos = puntoService.redimirBeneficio(cliente, beneficio);
+        Redencion redencion = new Redencion(
+                "RED-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase(),
+                "BEN-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase(),
+                beneficio, puntos, LocalDateTime.now(), cliente.getIdCliente());
+        catalogo.agregarRedencion(redencion);
+        catalogo.guardar();
+        return puntos;
+    }
+
+    public List<Redencion> getRedenciones(Cliente cliente) {
+        if (cliente == null) {
+            return new ArrayList<>();
+        }
+        return catalogo.redencionesDeCliente(cliente.getIdCliente());
     }
 
     public boolean puedeRedimir(Cliente cliente, String beneficio) {
@@ -203,6 +264,26 @@ public class CinemaFacade {
 
     public void actualizarPelicula(Administrador admin, Pelicula pelicula) {
         catalogoAdminService.actualizarPelicula(admin, pelicula);
+    }
+
+    public void actualizarSala(Administrador admin, Sala sala) {
+        catalogoAdminService.actualizarSala(admin, sala);
+    }
+
+    public void actualizarFuncion(Administrador admin, Funcion funcion) {
+        catalogoAdminService.actualizarFuncion(admin, funcion);
+    }
+
+    public void actualizarProducto(Administrador admin, Producto producto) {
+        catalogoAdminService.actualizarProducto(admin, producto);
+    }
+
+    public void actualizarCombo(Administrador admin, Combo combo) {
+        catalogoAdminService.actualizarCombo(admin, combo);
+    }
+
+    public void actualizarPromocion(Administrador admin, Promocion promocion) {
+        catalogoAdminService.actualizarPromocion(admin, promocion);
     }
 
     public void eliminarPelicula(Administrador admin, String idPelicula) {

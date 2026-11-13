@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<ScrollPane fitToWidth="true" styleClass="scroll-pane" xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="co.edu.uniquindio.cinemauq.controller.AdminDashboardController">
+    <VBox styleClass="page" spacing="16">
+        <HBox alignment="CENTER_LEFT" spacing="12">
+            <VBox spacing="3">
+                <Label styleClass="page-title" text="Panel administrativo"/>
+                <Label styleClass="page-subtitle" text="Resumen en tiempo real de la operación de CinemaUQ."/>
+            </VBox>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Button onAction="#actualizar" styleClass="ghost-button" text="Actualizar"/>
+            <Button onAction="#irReportes" styleClass="secondary-button" text="Ver reportes"/>
+        </HBox>
+
+        <HBox spacing="14">
+            <VBox spacing="4" styleClass="panel" HBox.hgrow="ALWAYS">
+                <Label styleClass="form-label" text="INGRESOS"/>
+                <Label fx:id="ingresos" styleClass="summary-total" text="$ 0"/>
+                <Label styleClass="hint" text="Compras pagadas"/>
+            </VBox>
+            <VBox spacing="4" styleClass="panel" HBox.hgrow="ALWAYS">
+                <Label styleClass="form-label" text="ENTRADAS VENDIDAS"/>
+                <Label fx:id="entradas" styleClass="summary-total" text="0"/>
+                <Label styleClass="hint" text="Boletas emitidas"/>
+            </VBox>
+            <VBox spacing="4" styleClass="panel" HBox.hgrow="ALWAYS">
+                <Label styleClass="form-label" text="FUNCIONES EN VENTA"/>
+                <Label fx:id="funcionesActivas" styleClass="summary-total" text="0"/>
+                <Label styleClass="hint" text="Con taquilla abierta"/>
+            </VBox>
+            <VBox spacing="4" styleClass="panel" HBox.hgrow="ALWAYS">
+                <Label styleClass="form-label" text="CLIENTES"/>
+                <Label fx:id="clientes" styleClass="summary-total" text="0"/>
+                <Label styleClass="hint" text="Registrados"/>
+            </VBox>
+            <VBox spacing="4" styleClass="panel" HBox.hgrow="ALWAYS">
+                <Label styleClass="form-label" text="RECARGAS PENDIENTES"/>
+                <Label fx:id="recargasPendientes" styleClass="summary-total" text="0"/>
+                <Label styleClass="hint" text="Por revisar"/>
+            </VBox>
+        </HBox>
+
+        <HBox spacing="16">
+            <VBox spacing="8" styleClass="panel" HBox.hgrow="ALWAYS">
+                <Label styleClass="section-title" text="Películas más vendidas"/>
+                <StackPane fx:id="chartPeliculas" prefHeight="280"/>
+            </VBox>
+            <VBox spacing="8" styleClass="panel" HBox.hgrow="ALWAYS">
+                <Label styleClass="section-title" text="Ocupación por función"/>
+                <StackPane fx:id="chartOcupacion" prefHeight="280"/>
+            </VBox>
+        </HBox>
+
+        <HBox spacing="16">
+            <VBox spacing="8" styleClass="panel" HBox.hgrow="ALWAYS">
+                <Label styleClass="section-title" text="Compras recientes"/>
+                <TableView fx:id="tablaCompras" prefHeight="260" styleClass="table-view">
+                    <columns>
+                        <TableColumn fx:id="colCompraId" prefWidth="160" text="Compra"/>
+                        <TableColumn fx:id="colCompraCliente" prefWidth="220" text="Cliente"/>
+                        <TableColumn fx:id="colCompraFecha" prefWidth="200" text="Fecha"/>
+                        <TableColumn fx:id="colCompraTotal" prefWidth="130" text="Total"/>
+                        <TableColumn fx:id="colCompraEstado" prefWidth="130" text="Estado"/>
+                    </columns>
+                    <placeholder>
+                        <Label styleClass="empty-text" text="Aún no hay compras registradas."/>
+                    </placeholder>
+                </TableView>
+            </VBox>
+            <VBox prefWidth="280" spacing="10" styleClass="panel">
+                <Label styleClass="section-title" text="Acciones rápidas"/>
+                <Button maxWidth="Infinity" onAction="#irCatalogo" styleClass="primary-button" text="Gestionar catálogo"/>
+                <Button maxWidth="Infinity" onAction="#irFunciones" styleClass="secondary-button" text="Programar funciones"/>
+                <Button maxWidth="Infinity" onAction="#irRecargas" styleClass="secondary-button" text="Revisar recargas"/>
+                <Separator/>
+                <Label styleClass="hint" wrapText="true"
+                       text="Los cambios de catálogo y funciones se reflejan de inmediato en la cartelera del cliente."/>
+            </VBox>
+        </HBox>
+    </VBox>
+</ScrollPane>

@@ -58,6 +58,45 @@ public class CatalogoAdminService {
         if (pelicula == null || catalogo.buscarPeliculaPorId(pelicula.getIdPelicula()) == null) {
             throw new CinemaUQException("La película no existe en el catálogo.");
         }
+        validarTexto(pelicula.getTitulo(), "El título de la película es obligatorio.");
+        validarTexto(pelicula.getGenero(), "El género de la película es obligatorio.");
+        if (pelicula.getDuracionMin() <= 0) {
+            throw new CinemaUQException("La duración de la película debe ser mayor que cero.");
+        }
+        catalogo.guardar();
+    }
+
+    public void actualizarSala(Administrador admin, Sala sala) {
+        validarAdmin(admin);
+        if (sala == null || catalogo.buscarSalaPorId(sala.getIdSala()) == null) {
+            throw new CinemaUQException("La sala no existe.");
+        }
+        if (sala.getFilas() <= 0 || sala.getColumnas() <= 0) {
+            throw new CinemaUQException("Las filas y columnas de la sala deben ser mayores que cero.");
+        }
+        validarTexto(sala.getTipoPantalla(), "El tipo de pantalla es obligatorio.");
+        catalogo.guardar();
+    }
+
+    public void actualizarFuncion(Administrador admin, Funcion funcion) {
+        validarAdmin(admin);
+        if (funcion == null || catalogo.buscarFuncionPorId(funcion.getIdFuncion()) == null) {
+            throw new CinemaUQException("La función no existe.");
+        }
+        if (funcion.getPelicula() == null
+                || catalogo.buscarPeliculaPorId(funcion.getPelicula().getIdPelicula()) == null) {
+            throw new CinemaUQException("La película de la función no existe.");
+        }
+        if (funcion.getSala() == null
+                || catalogo.buscarSalaPorId(funcion.getSala().getIdSala()) == null) {
+            throw new CinemaUQException("La sala de la función no existe.");
+        }
+        if (funcion.getFechaHora() == null) {
+            throw new CinemaUQException("La función requiere fecha y hora (RN-01).");
+        }
+        if (funcion.getPrecioEntrada() <= 0) {
+            throw new CinemaUQException("El precio de la entrada debe ser mayor que cero.");
+        }
         catalogo.guardar();
     }
 
@@ -157,6 +196,18 @@ public class CatalogoAdminService {
         return producto;
     }
 
+    public void actualizarProducto(Administrador admin, Producto producto) {
+        validarAdmin(admin);
+        if (producto == null || catalogo.buscarProductoPorId(producto.getIdProducto()) == null) {
+            throw new CinemaUQException("El producto no existe.");
+        }
+        validarTexto(producto.getNombre(), "El nombre del producto es obligatorio.");
+        if (producto.getPrecio() <= 0) {
+            throw new CinemaUQException("El precio del producto debe ser mayor que cero.");
+        }
+        catalogo.guardar();
+    }
+
     public void eliminarProducto(Administrador admin, String idProducto) {
         validarAdmin(admin);
         Producto producto = catalogo.buscarProductoPorId(idProducto);
@@ -190,6 +241,18 @@ public class CatalogoAdminService {
         return combo;
     }
 
+    public void actualizarCombo(Administrador admin, Combo combo) {
+        validarAdmin(admin);
+        if (combo == null || catalogo.buscarComboPorId(combo.getIdCombo()) == null) {
+            throw new CinemaUQException("El combo no existe.");
+        }
+        validarTexto(combo.getNombre(), "El nombre del combo es obligatorio.");
+        if (combo.getItems() == null || combo.getItems().isEmpty()) {
+            throw new CinemaUQException("El combo debe tener al menos un ítem.");
+        }
+        catalogo.guardar();
+    }
+
     public void eliminarCombo(Administrador admin, String idCombo) {
         validarAdmin(admin);
         Combo combo = catalogo.buscarComboPorId(idCombo);
@@ -218,6 +281,25 @@ public class CatalogoAdminService {
         catalogo.agregarPromocion(promocion);
         catalogo.guardar();
         return promocion;
+    }
+
+    public void actualizarPromocion(Administrador admin, Promocion promocion) {
+        validarAdmin(admin);
+        if (promocion == null || catalogo.buscarPromocionPorId(promocion.getIdPromocion()) == null) {
+            throw new CinemaUQException("La promoción no existe.");
+        }
+        validarTexto(promocion.getNombre(), "El nombre de la promoción es obligatorio.");
+        if (promocion.getTipo() == null) {
+            throw new CinemaUQException("La promoción requiere un tipo.");
+        }
+        if (promocion.getPorcentajeOValor() <= 0) {
+            throw new CinemaUQException("El valor de la promoción debe ser mayor que cero.");
+        }
+        if (promocion.getFechaInicio() != null && promocion.getFechaFin() != null
+                && promocion.getFechaFin().isBefore(promocion.getFechaInicio())) {
+            throw new CinemaUQException("La fecha final no puede ser anterior a la inicial.");
+        }
+        catalogo.guardar();
     }
 
     public void eliminarPromocion(Administrador admin, String idPromocion) {

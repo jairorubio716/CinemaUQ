@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<ScrollPane fitToWidth="true" styleClass="scroll-pane" xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="co.edu.uniquindio.cinemauq.controller.AdminReportesController">
+    <VBox styleClass="page" spacing="16">
+        <VBox spacing="3">
+            <Label styleClass="page-title" text="Reportes"/>
+            <Label styleClass="page-subtitle" text="Analiza ventas, taquilla y confitería por periodo."/>
+        </VBox>
+
+        <HBox alignment="CENTER_LEFT" spacing="12" styleClass="panel">
+            <Label styleClass="form-label" text="Desde"/>
+            <DatePicker fx:id="fechaInicio" prefWidth="170"/>
+            <Label styleClass="form-label" text="Hasta"/>
+            <DatePicker fx:id="fechaFin" prefWidth="170"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label fx:id="resumen" styleClass="hint" text="—"/>
+            <Button onAction="#generar" styleClass="primary-button" text="Generar reporte"/>
+        </HBox>
+
+        <HBox spacing="14">
+            <VBox spacing="4" styleClass="panel" HBox.hgrow="ALWAYS">
+                <Label styleClass="form-label" text="VENTAS DEL PERIODO"/>
+                <Label fx:id="ventas" styleClass="summary-total" text="$ 0"/>
+            </VBox>
+            <VBox spacing="4" styleClass="panel" HBox.hgrow="ALWAYS">
+                <Label styleClass="form-label" text="ENTRADAS"/>
+                <Label fx:id="entradas" styleClass="summary-total" text="0"/>
+            </VBox>
+            <VBox spacing="4" styleClass="panel" HBox.hgrow="ALWAYS">
+                <Label styleClass="form-label" text="CONFITERÍA"/>
+                <Label fx:id="confiteria" styleClass="summary-total" text="$ 0"/>
+            </VBox>
+            <VBox spacing="4" styleClass="panel" HBox.hgrow="ALWAYS">
+                <Label styleClass="form-label" text="OCUPACIÓN PROMEDIO"/>
+                <Label fx:id="ocupacion" styleClass="summary-total" text="0%"/>
+            </VBox>
+        </HBox>
+
+        <Label styleClass="section-title" text="Ventas por película"/>
+        <TableView fx:id="tablaReporte" prefHeight="400" styleClass="table-view">
+            <columns>
+                <TableColumn fx:id="colReportePelicula" prefWidth="340" text="Película"/>
+                <TableColumn fx:id="colReporteFunciones" prefWidth="140" text="Funciones"/>
+                <TableColumn fx:id="colReporteEntradas" prefWidth="140" text="Entradas"/>
+                <TableColumn fx:id="colReporteIngresos" prefWidth="180" text="Ingresos por entradas"/>
+            </columns>
+            <placeholder>
+                <Label styleClass="empty-text" text="No hay ventas en el periodo seleccionado."/>
+            </placeholder>
+        </TableView>
+
+        <Label styleClass="hint" wrapText="true"
+               text="Vista previa de reportes. La exportación de archivos y los gráficos comparativos se incorporan en la fase de reportes."/>
+    </VBox>
+</ScrollPane>

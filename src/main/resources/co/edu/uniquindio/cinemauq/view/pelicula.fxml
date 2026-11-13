@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<ScrollPane fitToWidth="true" styleClass="scroll-pane" xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="co.edu.uniquindio.cinemauq.controller.PeliculaController">
+    <VBox styleClass="page" spacing="22">
+        <HBox alignment="CENTER_LEFT" spacing="12">
+            <Button onAction="#volver" styleClass="ghost-button" text="← Volver a la cartelera"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label styleClass="hint" text="Selecciona una función para elegir tus asientos"/>
+        </HBox>
+
+        <HBox alignment="TOP_LEFT" spacing="30">
+            <StackPane fx:id="poster"/>
+            <VBox spacing="13" HBox.hgrow="ALWAYS">
+                <Label fx:id="titulo" styleClass="page-title" text="Película"/>
+                <Label fx:id="meta" styleClass="page-subtitle" text="Género · Duración"/>
+                <HBox fx:id="badges" spacing="9"/>
+                <Label fx:id="sinopsis" styleClass="hero-text" text="Sinopsis" wrapText="true"/>
+                <Region prefHeight="10"/>
+                <Label styleClass="section-title" text="Funciones"/>
+                <FlowPane fx:id="fechas" hgap="10" vgap="10"/>
+                <FlowPane fx:id="funciones" hgap="16" vgap="16"/>
+                <VBox fx:id="sinFunciones" alignment="CENTER" spacing="8" styleClass="empty-state">
+                    <Label styleClass="empty-icon" text="🕓"/>
+                    <Label styleClass="empty-text" text="Aún no hay funciones programadas para esta película."/>
+                </VBox>
+            </VBox>
+        </HBox>
+    </VBox>
+</ScrollPane>

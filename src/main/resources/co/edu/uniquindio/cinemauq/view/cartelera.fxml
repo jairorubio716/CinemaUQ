@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<ScrollPane fitToWidth="true" styleClass="scroll-pane" xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="co.edu.uniquindio.cinemauq.controller.CarteleraController">
+    <VBox styleClass="page" spacing="22">
+        <HBox alignment="CENTER_LEFT" spacing="12">
+            <VBox spacing="3">
+                <Label styleClass="page-title" text="Cartelera"/>
+                <Label fx:id="contador" styleClass="page-subtitle" text="Películas disponibles"/>
+            </VBox>
+            <Region HBox.hgrow="ALWAYS"/>
+            <TextField fx:id="busqueda" prefWidth="250" promptText="Buscar película..."/>
+            <ComboBox fx:id="genero" prefWidth="170"/>
+        </HBox>
+
+        <HBox fx:id="hero" alignment="CENTER_LEFT" spacing="28" styleClass="hero">
+            <VBox spacing="11" HBox.hgrow="ALWAYS">
+                <Label fx:id="heroKicker" styleClass="hero-kicker" text="DESTACADA"/>
+                <Label fx:id="heroTitulo" styleClass="hero-title" text="Película"/>
+                <Label fx:id="heroMeta" styleClass="card-meta" text="Género · Duración"/>
+                <Label fx:id="heroSinopsis" styleClass="hero-text" text="Sinopsis" wrapText="true"/>
+                <HBox spacing="12">
+                    <Button fx:id="btnHeroComprar" styleClass="primary-button" text="Comprar entradas"/>
+                    <Button fx:id="btnHeroDetalle" styleClass="secondary-button" text="Ver detalle"/>
+                </HBox>
+            </VBox>
+            <StackPane fx:id="heroPoster"/>
+        </HBox>
+
+        <HBox alignment="CENTER_LEFT" spacing="10">
+            <Label styleClass="section-title" text="En cartelera"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label styleClass="hint" text="Selecciona una película para ver sus funciones"/>
+        </HBox>
+        <FlowPane fx:id="gridCartelera" hgap="20" styleClass="flow-pane" vgap="24"/>
+
+        <Label styleClass="section-title" text="Próximamente"/>
+        <FlowPane fx:id="gridProximamente" hgap="20" styleClass="flow-pane" vgap="24"/>
+    </VBox>
+</ScrollPane>

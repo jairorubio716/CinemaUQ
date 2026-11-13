@@ -8,6 +8,7 @@ import co.edu.uniquindio.cinemauq.model.Funcion;
 import co.edu.uniquindio.cinemauq.model.Pelicula;
 import co.edu.uniquindio.cinemauq.model.Producto;
 import co.edu.uniquindio.cinemauq.model.Promocion;
+import co.edu.uniquindio.cinemauq.model.Redencion;
 import co.edu.uniquindio.cinemauq.model.Sala;
 import co.edu.uniquindio.cinemauq.model.SolicitudRecarga;
 
@@ -29,5 +30,6 @@ public class DatosCinema {
     public List<Promocion> promociones = new ArrayList<>();
     public List<Compra> compras = new ArrayList<>();
     public List<SolicitudRecarga> solicitudesRecarga = new ArrayList<>();
+    public List<Redencion> redenciones = new ArrayList<>();
     public int secuenciaMovimiento = 1;
 }

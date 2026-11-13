@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane styleClass="page" xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="co.edu.uniquindio.cinemauq.controller.ConfiteriaController">
+    <top>
+        <VBox spacing="4">
+            <Button maxWidth="180" onAction="#volver" styleClass="ghost-button" text="← Volver a asientos"/>
+            <Label styleClass="page-title" text="Confitería"/>
+            <Label styleClass="page-subtitle" text="Agrega productos o combos a tu compra. Puedes cambiar cantidades antes de pagar."/>
+        </VBox>
+    </top>
+    <center>
+        <HBox spacing="22" style="-fx-padding: 18 0 0 0;">
+            <VBox spacing="14" HBox.hgrow="ALWAYS">
+                <HBox fx:id="categorias" spacing="8"/>
+                <ScrollPane fitToWidth="true" styleClass="scroll-pane" VBox.vgrow="ALWAYS">
+                    <FlowPane fx:id="productos" hgap="16" vgap="16" styleClass="flow-pane"/>
+                </ScrollPane>
+            </VBox>
+
+            <VBox prefWidth="330" styleClass="summary">
+                <Label styleClass="section-title" text="Resumen del pedido"/>
+                <Label fx:id="resumenFuncion" styleClass="summary-row" wrapText="true"/>
+                <Label fx:id="resumenEntradas" styleClass="summary-row"/>
+                <Separator/>
+                <Label styleClass="form-label" text="CONFITERÍA"/>
+                <VBox fx:id="detalleItems" spacing="5"/>
+                <Separator/>
+                <HBox>
+                    <Label styleClass="summary-row" text="Confitería"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Label fx:id="totalConfiteria" styleClass="function-price"/>
+                </HBox>
+                <HBox fx:id="filaDescuento" alignment="CENTER_LEFT" managed="false" visible="false">
+                    <Label styleClass="summary-row" text="Descuento aplicado"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Label fx:id="descuento" styleClass="kpi-note"/>
+                </HBox>
+                <HBox alignment="CENTER_LEFT">
+                    <Label styleClass="summary-row" text="Total estimado"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Label fx:id="total" styleClass="summary-total"/>
+                </HBox>
+                <Button fx:id="btnPagar" maxWidth="Infinity" onAction="#continuar"
+                        styleClass="primary-button" text="Continuar al pago"/>
+                <Button maxWidth="Infinity" onAction="#volver" styleClass="ghost-button" text="Volver a asientos"/>
+            </VBox>
+        </HBox>
+    </center>
+</BorderPane>

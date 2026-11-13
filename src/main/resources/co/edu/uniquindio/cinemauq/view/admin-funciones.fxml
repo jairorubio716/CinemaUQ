@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<ScrollPane fitToWidth="true" styleClass="scroll-pane" xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="co.edu.uniquindio.cinemauq.controller.AdminFuncionesController">
+    <VBox styleClass="page" spacing="16">
+        <VBox spacing="3">
+            <Label styleClass="page-title" text="Funciones"/>
+            <Label styleClass="page-subtitle" text="Programa funciones, habilita la venta y gestiona cancelaciones con reembolso."/>
+        </VBox>
+
+        <HBox alignment="CENTER_LEFT" spacing="12" styleClass="panel">
+            <Label styleClass="form-label" text="Película"/>
+            <ComboBox fx:id="filtroPelicula" prefWidth="260"/>
+            <Label styleClass="form-label" text="Estado"/>
+            <ComboBox fx:id="filtroEstado" prefWidth="170"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label fx:id="resumen" styleClass="hint" text="0 funciones"/>
+            <Button onAction="#actualizar" styleClass="ghost-button" text="Actualizar"/>
+        </HBox>
+
+        <HBox alignment="CENTER_LEFT" spacing="10">
+            <Button onAction="#nuevaFuncion" styleClass="primary-button" text="Nueva función"/>
+            <Button onAction="#editarFuncion" styleClass="secondary-button" text="Editar"/>
+            <Button onAction="#activarVenta" styleClass="secondary-button" text="Habilitar venta"/>
+            <Button onAction="#cancelarFuncion" styleClass="danger-button" text="Cancelar función"/>
+            <Button onAction="#eliminarFuncion" styleClass="ghost-button" text="Eliminar"/>
+        </HBox>
+
+        <TableView fx:id="tablaFunciones" prefHeight="540" styleClass="table-view">
+            <columns>
+                <TableColumn fx:id="colFuncionPelicula" prefWidth="240" text="Película"/>
+                <TableColumn fx:id="colFuncionSala" prefWidth="100" text="Sala"/>
+                <TableColumn fx:id="colFuncionFecha" prefWidth="210" text="Fecha y hora"/>
+                <TableColumn fx:id="colFuncionPrecio" prefWidth="120" text="Precio"/>
+                <TableColumn fx:id="colFuncionEstado" prefWidth="130" text="Estado"/>
+                <TableColumn fx:id="colFuncionVendidas" prefWidth="100" text="Vendidas"/>
+                <TableColumn fx:id="colFuncionOcupacion" prefWidth="100" text="Ocupación"/>
+            </columns>
+            <placeholder>
+                <Label styleClass="empty-text" text="No hay funciones para los filtros seleccionados."/>
+            </placeholder>
+        </TableView>
+    </VBox>
+</ScrollPane>

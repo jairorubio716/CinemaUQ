@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<ScrollPane fitToWidth="true" styleClass="scroll-pane" xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="co.edu.uniquindio.cinemauq.controller.PuntosController">
+    <VBox styleClass="page" spacing="18">
+        <HBox alignment="CENTER_LEFT" spacing="12">
+            <VBox spacing="3">
+                <Label styleClass="page-title" text="Mis puntos"/>
+                <Label styleClass="page-subtitle" text="Acumula y canjea puntos CinemaUQ por beneficios."/>
+            </VBox>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Button onAction="#actualizar" styleClass="ghost-button" text="Actualizar"/>
+        </HBox>
+
+        <HBox spacing="18">
+            <VBox alignment="CENTER" prefWidth="300" spacing="6" styleClass="panel">
+                <Label styleClass="form-label" text="SALDO DE PUNTOS"/>
+                <Label fx:id="saldo" styleClass="summary-total" text="0"/>
+                <Label styleClass="hint" text="puntos vigentes"/>
+                <Label fx:id="estrategia" styleClass="hint" text="Canjea tus puntos por beneficios." wrapText="true"/>
+            </VBox>
+            <VBox spacing="10" styleClass="panel" HBox.hgrow="ALWAYS">
+                <Label styleClass="section-title" text="Canjea tus puntos"/>
+                <HBox fx:id="beneficios" spacing="14"/>
+            </VBox>
+        </HBox>
+
+        <Label styleClass="section-title" text="Lotes de puntos"/>
+        <TableView fx:id="tablaLotes" prefHeight="240" styleClass="table-view">
+            <columns>
+                <TableColumn fx:id="colCantidad" prefWidth="130" text="Cantidad"/>
+                <TableColumn fx:id="colObtencion" prefWidth="180" text="Obtención"/>
+                <TableColumn fx:id="colVencimiento" prefWidth="180" text="Vencimiento"/>
+                <TableColumn fx:id="colEstado" prefWidth="120" text="Estado"/>
+            </columns>
+            <placeholder>
+                <Label styleClass="empty-text" text="Aún no tienes puntos acumulados."/>
+            </placeholder>
+        </TableView>
+
+        <Label styleClass="section-title" text="Historial de canjes"/>
+        <VBox fx:id="canjes" spacing="8"/>
+    </VBox>
+</ScrollPane>

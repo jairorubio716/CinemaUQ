@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<ScrollPane fitToWidth="true" styleClass="scroll-pane" xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="co.edu.uniquindio.cinemauq.controller.AdminCatalogoController">
+    <VBox styleClass="page" spacing="16">
+        <VBox spacing="3">
+            <Label styleClass="page-title" text="Catálogo"/>
+            <Label styleClass="page-subtitle" text="Gestiona películas, salas, confitería, combos y promociones."/>
+        </VBox>
+
+        <TabPane prefHeight="620" tabClosingPolicy="UNAVAILABLE" styleClass="tab-pane">
+            <Tab text="Películas">
+                <VBox spacing="10" styleClass="tab-content">
+                    <HBox alignment="CENTER_LEFT" spacing="10">
+                        <Label fx:id="contadorPeliculas" styleClass="hint" text="0 películas"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Button onAction="#nuevaPelicula" styleClass="primary-button" text="Nueva película"/>
+                        <Button onAction="#editarPelicula" styleClass="secondary-button" text="Editar"/>
+                        <Button onAction="#eliminarPelicula" styleClass="danger-button" text="Eliminar"/>
+                    </HBox>
+                    <TableView fx:id="tablaPeliculas" prefHeight="510" styleClass="table-view">
+                        <columns>
+                            <TableColumn fx:id="colPeliculaTitulo" prefWidth="260" text="Título"/>
+                            <TableColumn fx:id="colPeliculaGenero" prefWidth="140" text="Género"/>
+                            <TableColumn fx:id="colPeliculaDuracion" prefWidth="110" text="Duración"/>
+                            <TableColumn fx:id="colPeliculaClasificacion" prefWidth="120" text="Clasificación"/>
+                            <TableColumn fx:id="colPeliculaCartelera" prefWidth="150" text="Estado"/>
+                        </columns>
+                        <placeholder>
+                            <Label styleClass="empty-text" text="No hay películas registradas."/>
+                        </placeholder>
+                    </TableView>
+                </VBox>
+            </Tab>
+
+            <Tab text="Salas">
+                <VBox spacing="10" styleClass="tab-content">
+                    <HBox alignment="CENTER_LEFT" spacing="10">
+                        <Label fx:id="contadorSalas" styleClass="hint" text="0 salas"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Button onAction="#nuevaSala" styleClass="primary-button" text="Nueva sala"/>
+                        <Button onAction="#editarSala" styleClass="secondary-button" text="Editar"/>
+                        <Button onAction="#eliminarSala" styleClass="danger-button" text="Eliminar"/>
+                    </HBox>
+                    <TableView fx:id="tablaSalas" prefHeight="510" styleClass="table-view">
+                        <columns>
+                            <TableColumn fx:id="colSalaNumero" prefWidth="180" text="Sala"/>
+                            <TableColumn fx:id="colSalaDimensiones" prefWidth="280" text="Dimensiones"/>
+                            <TableColumn fx:id="colSalaPantalla" prefWidth="180" text="Pantalla"/>
+                        </columns>
+                        <placeholder>
+                            <Label styleClass="empty-text" text="No hay salas registradas."/>
+                        </placeholder>
+                    </TableView>
+                </VBox>
+            </Tab>
+
+            <Tab text="Confitería">
+                <VBox spacing="10" styleClass="tab-content">
+                    <HBox alignment="CENTER_LEFT" spacing="10">
+                        <Label fx:id="contadorProductos" styleClass="hint" text="0 productos"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Button onAction="#nuevoProducto" styleClass="primary-button" text="Nuevo producto"/>
+                        <Button onAction="#editarProducto" styleClass="secondary-button" text="Editar"/>
+                        <Button onAction="#eliminarProducto" styleClass="danger-button" text="Eliminar"/>
+                    </HBox>
+                    <TableView fx:id="tablaProductos" prefHeight="510" styleClass="table-view">
+                        <columns>
+                            <TableColumn fx:id="colProductoNombre" prefWidth="320" text="Producto"/>
+                            <TableColumn fx:id="colProductoTipo" prefWidth="180" text="Tipo"/>
+                            <TableColumn fx:id="colProductoPrecio" prefWidth="160" text="Precio"/>
+                        </columns>
+                        <placeholder>
+                            <Label styleClass="empty-text" text="No hay productos registrados."/>
+                        </placeholder>
+                    </TableView>
+                </VBox>
+            </Tab>
+
+            <Tab text="Combos">
+                <VBox spacing="10" styleClass="tab-content">
+                    <HBox alignment="CENTER_LEFT" spacing="10">
+                        <Label fx:id="contadorCombos" styleClass="hint" text="0 combos"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Button onAction="#nuevoCombo" styleClass="primary-button" text="Nuevo combo"/>
+                        <Button onAction="#editarCombo" styleClass="secondary-button" text="Editar"/>
+                        <Button onAction="#eliminarCombo" styleClass="danger-button" text="Eliminar"/>
+                    </HBox>
+                    <TableView fx:id="tablaCombos" prefHeight="510" styleClass="table-view">
+                        <columns>
+                            <TableColumn fx:id="colComboNombre" prefWidth="320" text="Combo"/>
+                            <TableColumn fx:id="colComboItems" prefWidth="160" text="Ítems"/>
+                            <TableColumn fx:id="colComboPrecio" prefWidth="160" text="Precio"/>
+                        </columns>
+                        <placeholder>
+                            <Label styleClass="empty-text" text="No hay combos registrados."/>
+                        </placeholder>
+                    </TableView>
+                </VBox>
+            </Tab>
+
+            <Tab text="Promociones">
+                <VBox spacing="10" styleClass="tab-content">
+                    <HBox alignment="CENTER_LEFT" spacing="10">
+                        <Label fx:id="contadorPromociones" styleClass="hint" text="0 promociones"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Button onAction="#nuevaPromocion" styleClass="primary-button" text="Nueva promoción"/>
+                        <Button onAction="#editarPromocion" styleClass="secondary-button" text="Editar"/>
+                        <Button onAction="#eliminarPromocion" styleClass="danger-button" text="Eliminar"/>
+                    </HBox>
+                    <TableView fx:id="tablaPromociones" prefHeight="510" styleClass="table-view">
+                        <columns>
+                            <TableColumn fx:id="colPromocionNombre" prefWidth="220" text="Promoción"/>
+                            <TableColumn fx:id="colPromocionTipo" prefWidth="190" text="Tipo"/>
+                            <TableColumn fx:id="colPromocionValor" prefWidth="110" text="Valor"/>
+                            <TableColumn fx:id="colPromocionVigencia" prefWidth="230" text="Vigencia"/>
+                            <TableColumn fx:id="colPromocionEstado" prefWidth="120" text="Estado"/>
+                        </columns>
+                        <placeholder>
+                            <Label styleClass="empty-text" text="No hay promociones registradas."/>
+                        </placeholder>
+                    </TableView>
+                </VBox>
+            </Tab>
+        </TabPane>
+    </VBox>
+</ScrollPane>

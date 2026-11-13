@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<ScrollPane fitToWidth="true" styleClass="scroll-pane" xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="co.edu.uniquindio.cinemauq.controller.ConfirmacionController">
+    <VBox alignment="CENTER" styleClass="page" spacing="18">
+        <VBox alignment="CENTER" maxWidth="640" spacing="14" styleClass="ticket">
+            <Label styleClass="success-icon" text="✓"/>
+            <Label styleClass="page-title" text="¡Compra confirmada!"/>
+            <Label fx:id="mensaje" styleClass="page-subtitle" text="Tu compra quedó registrada." wrapText="true"/>
+            <HBox alignment="CENTER" spacing="30">
+                <VBox fx:id="qr" alignment="CENTER"/>
+                <VBox alignment="CENTER_LEFT" spacing="6">
+                    <Label styleClass="form-label" text="CÓDIGO DE COMPRA"/>
+                    <Label fx:id="codigo" styleClass="ticket-code" text="CMP-00000000"/>
+                    <Label fx:id="pelicula" styleClass="h1" text="Película"/>
+                    <Label fx:id="funcion" styleClass="summary-row" text="Función"/>
+                    <Label fx:id="asientos" styleClass="summary-row" text="Asientos"/>
+                    <Label fx:id="total" styleClass="price" text="$ 0"/>
+                </VBox>
+            </HBox>
+            <Separator/>
+            <Label fx:id="puntos" styleClass="kpi-note" text="Puntos CinemaUQ"/>
+            <HBox alignment="CENTER" spacing="12">
+                <Button onAction="#misCompras" styleClass="primary-button" text="Ver mis compras"/>
+                <Button onAction="#cartelera" styleClass="secondary-button" text="Volver a la cartelera"/>
+            </HBox>
+        </VBox>
+    </VBox>
+</ScrollPane>
