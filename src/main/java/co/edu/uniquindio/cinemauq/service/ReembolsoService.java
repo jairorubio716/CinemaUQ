@@ -32,10 +32,14 @@ public class ReembolsoService {
      * Selecciona la estrategia de reembolso según las horas restantes (RN-05/RN-06).
      */
     public IReembolso seleccionarEstrategia(long horasRestantes, boolean canceladaPorCine) {
-        if (canceladaPorCine || horasRestantes > 24) {
+        return seleccionarEstrategiaPorMinutos(horasRestantes * 60, canceladaPorCine);
+    }
+
+    public IReembolso seleccionarEstrategiaPorMinutos(long minutosRestantes, boolean canceladaPorCine) {
+        if (canceladaPorCine || minutosRestantes > 24 * 60) {
             return new ReembolsoCompleto();
         }
-        if (horasRestantes >= 2) {
+        if (minutosRestantes >= 2 * 60) {
             return new ReembolsoParcial(80);
         }
         return new SinReembolso();
